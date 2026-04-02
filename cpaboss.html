@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPAboss</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ac:#00C98D;--ac2:#00A374;
+  --fundo:#0A0F0D;--card:#111712;--card2:#161D17;--borda:#1E2B20;
+  --texto:#E8F0E9;--muted:#6B8F70;--perigo:#FF5C5C;--alerta:#FFB347;--azul:#4A9EFF;
+  --transition-speed: 0.5s;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--fundo);color:var(--texto);min-height:100vh;font-size:14px;transition:background var(--transition-speed) ease}
+.app{max-width:480px;margin:0 auto;padding:0 0 80px}
+.header{padding:20px 16px 0;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:18px;font-weight:600;letter-spacing:-0.5px;transition:color var(--transition-speed) ease}
+.logo-cpa{color:var(--ac);transition:color var(--transition-speed) ease}
+.logo-boss{color:var(--muted);font-weight:300}
+.status-dot{width:8px;height:8px;border-radius:50%;animation:pulse 2s infinite;transition:background var(--transition-speed) ease}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tabs{display:flex;gap:4px;padding:16px;border-bottom:1px solid var(--borda);position:relative;transition:border-color var(--transition-speed) ease}
+.tab{flex:1;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all var(--transition-speed) ease;background:transparent;color:var(--muted);position:relative}
+.tab.active{background:var(--card2);color:var(--ac);border:1px solid var(--borda)}
+.tab-badge{position:absolute;top:-4px;right:4px;background:var(--perigo);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:99px;min-width:16px;text-align:center}
+.section{display:none;padding:16px}
+.section.active{display:block}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.metric{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:14px;transition:border-color var(--transition-speed) ease, background var(--transition-speed) ease}
+.metric-label{font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.metric-value{font-size:24px;font-weight:600;color:var(--texto)}
+.metric-value.verde{color:var(--ac);transition:color var(--transition-speed) ease}
+.metric-value.alerta{color:var(--alerta)}
+.card{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color var(--transition-speed) ease}
+.card-title{font-size:13px;font-weight:600;color:var(--texto);margin-bottom:12px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;margin-top:10px}
+label:first-child{margin-top:0}
+input,select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--borda);background:var(--card2);color:var(--texto);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color var(--transition-speed) ease}
+input:focus,select:focus{border-color:var(--ac)}
+select option{background:#111712}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all var(--transition-speed) ease;margin-top:14px}
+.btn-verde{background:var(--ac);color:#000}
+.btn-verde:hover{background:var(--ac2);filter:brightness(1.1)}
+.btn-outline{background:transparent;border:1px solid var(--borda);color:var(--muted)}
+.lead-card{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color var(--transition-speed) ease}
+.lead-card:hover{border-color:var(--ac)}
+.lead-name{font-size:15px;font-weight:600}
+.lead-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.progress-bar{height:4px;background:var(--borda);border-radius:99px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:99px;background:var(--ac);transition:width .4s, background var(--transition-speed) ease}
+.progress-info{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.3px}
+.badge-ok{background:var(--ac-bg);color:var(--ac);transition:background var(--transition-speed) ease,color var(--transition-speed) ease}
+.badge-pend{background:#2a1e00;color:var(--alerta)}
+.badge-fail{background:#2a0000;color:var(--perigo)}
+.hoje-card{background:var(--card);border:2px solid var(--ac);border-radius:12px;padding:16px;margin-bottom:12px;transition:border-color var(--transition-speed) ease}
+.hoje-titulo{font-size:11px;color:var(--ac);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;transition:color var(--transition-speed) ease}
+.hoje-nome{font-size:16px;font-weight:600}
+.hoje-valor{font-size:30px;font-weight:700;color:var(--ac);margin:8px 0 4px;transition:color var(--transition-speed) ease}
+.pix-box{background:var(--card2);border:1px solid var(--borda);border-radius:8px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--azul);cursor:pointer;transition:all .2s;margin-top:8px;word-break:break-all}
+.dep-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--borda)}
+.dep-item:last-child{border-bottom:none}
+.dep-data{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
+.dep-valor{font-size:15px;font-weight:600;margin-top:2px}
+.btn-sm{padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;border:none;cursor:pointer;transition:all .2s}
+.btn-ok{background:var(--ac-bg);color:var(--ac);transition:background var(--transition-speed) ease,color var(--transition-speed) ease}
+.btn-desfazer{background:var(--card2);color:var(--muted);border:1px solid var(--borda)}
+.lucro-box{background:var(--ac-bg);border:1px solid var(--ac-mid);border-radius:12px;padding:16px;text-align:center;margin-bottom:14px;transition:background var(--transition-speed) ease,border-color var(--transition-speed) ease}
+.lucro-label{font-size:11px;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;transition:color var(--transition-speed) ease}
+.lucro-valor{font-size:32px;font-weight:700;color:var(--ac);margin:4px 0;transition:color var(--transition-speed) ease}
+.lucro-sub{font-size:11px;color:var(--muted)}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;line-height:2}
+.loading{text-align:center;padding:30px;color:var(--muted);font-size:13px}
+.err{background:#2a0000;border:1px solid #550000;border-radius:8px;padding:12px;color:var(--perigo);font-size:12px;margin-bottom:12px;line-height:1.6}
+.succ{background:var(--ac-bg);border:1px solid var(--ac-mid);border-radius:8px;padding:12px;color:var(--ac);font-size:12px;margin-bottom:12px;transition:background var(--transition-speed) ease}
+.sep{height:1px;background:var(--borda);margin:14px 0}
+.back-btn{background:var(--card2);border:1px solid var(--borda);color:var(--texto);padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;margin-bottom:14px}
+.detalhe-title{font-size:18px;font-weight:700;margin-bottom:14px}
+.info-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--borda)}
+.info-row:last-child{border-bottom:none}
+.cpa-validado-banner{background:var(--ac-bg);border:1px solid var(--ac);border-radius:10px;padding:12px;text-align:center;color:var(--ac);font-weight:600;font-size:14px;margin-top:10px;transition:all var(--transition-speed) ease}
+.aviso-banner{background:var(--ac-bg2);border:2px solid var(--ac);border-radius:12px;padding:16px;margin-bottom:16px;animation:fadeIn .4s ease;transition:all var(--transition-speed) ease}
+.aviso-banner-titulo{font-size:12px;color:var(--ac);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px;transition:color var(--transition-speed) ease}
+.aviso-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--borda)}
+.aviso-item:last-child{border-bottom:none}
+.aviso-nome{font-size:14px;font-weight:600}
+.aviso-valor{font-size:16px;font-weight:700;color:var(--ac);transition:color var(--transition-speed) ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Pill indicador de casa */
+.casa-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid var(--ac);color:var(--ac);background:var(--ac-bg);margin-bottom:10px;transition:all var(--transition-speed) ease}
+.casa-dot{width:7px;height:7px;border-radius:50%;background:var(--ac);transition:background var(--transition-speed) ease}
+
+/* Modal notificação */
+.notif-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
+.notif-box{background:var(--card);border:2px solid var(--ac);border-radius:16px;padding:24px;width:100%;max-width:360px;animation:popIn .3s ease;transition:border-color var(--transition-speed) ease}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.notif-icon{font-size:32px;text-align:center;margin-bottom:12px}
+.notif-titulo{font-size:16px;font-weight:700;color:var(--ac);text-align:center;margin-bottom:6px;transition:color var(--transition-speed) ease}
+.notif-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.6}
+.notif-lista{margin-bottom:16px}
+.notif-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borda);font-size:13px}
+.notif-item:last-child{border-bottom:none}
+
+/* Fundo com cor suave da casa */
+.bg-tint{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity var(--transition-speed) ease}
+.app{position:relative;z-index:1}
+</style>
+</head>
+<body>
+
+<div class="bg-tint" id="bg-tint"></div>
+
+<div class="app">
+  <div class="header">
+    <div class="logo"><span class="logo-cpa">CPA</span><span class="logo-boss">boss</span></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+      <div class="status-dot" id="sdot" style="background:var(--alerta)"></div>
+      <span id="stxt">conectando...</span>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="goTab('painel')">Painel</button>
+    <button class="tab" onclick="goTab('novo')">+ Lead</button>
+    <button class="tab" id="tab-hoje" onclick="goTab('hoje')">Hoje</button>
+    <button class="tab" onclick="goTab('leads')">Leads</button>
+  </div>
+
+  <div id="sec-painel" class="section active"><div class="loading">Carregando...</div></div>
+
+  <div id="sec-novo" class="section">
+    <div class="card">
+      <div class="card-title">Cadastrar novo lead</div>
+      <div id="fmsg"></div>
+      <div class="row2">
+        <div><label>Nome</label><input id="fn" placeholder="Ex: Dona Maria"></div>
+        <div><label>Telefone</label><input id="ft" placeholder="11999999999"></div>
+      </div>
+      <label>Chave PIX</label>
+      <input id="fp" placeholder="CPF, telefone ou email">
+      <div class="row2">
+        <div>
+          <label>Casa de apostas</label>
+          <select id="fc" onchange="trocarCasa(this.value)">
+            <option value="">Selecionar...</option>
+            <option value="EstrelaBet">EstrelaBet</option>
+            <option value="BetAki">BetAki</option>
+            <option value="SuperBet">SuperBet</option>
+            <option value="Betano">Betano</option>
+          </select>
+        </div>
+        <div><label>CPA esperado (R$)</label><input id="fcpa" type="number" placeholder="130"></div>
+      </div>
+      <label>Meta total de depósito (R$)</label>
+      <input id="fmeta" type="number" placeholder="50">
+      <label>Data do primeiro depósito</label>
+      <input id="fini" type="date">
+      <div class="sep"></div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Intervalos e valores gerados automaticamente de forma aleatória. Nenhum valor se repete.</div>
+      <button class="btn btn-verde" onclick="salvarLead()">Gerar depósitos e salvar</button>
+    </div>
+  </div>
+
+  <div id="sec-hoje" class="section"><div class="loading">Carregando...</div></div>
+  <div id="sec-leads" class="section"><div class="loading">Carregando...</div></div>
+  <div id="sec-detalhe" class="section"></div>
+</div>
+
+<div id="notif-overlay" class="notif-overlay" style="display:none" onclick="fecharNotif()">
+  <div class="notif-box" onclick="event.stopPropagation()">
+    <div class="notif-icon">🔔</div>
+    <div class="notif-titulo">Depósitos para hoje!</div>
+    <div class="notif-sub">Você tem depósitos pendentes para fazer agora.</div>
+    <div class="notif-lista" id="notif-lista"></div>
+    <button class="btn btn-verde" onclick="fecharNotifIrHoje()">Ver depósitos →</button>
+    <button class="btn btn-outline" style="margin-top:8px" onclick="fecharNotif()">Fechar</button>
+  </div>
+</div>
+
+<script>
+const SBURL='https://bnsucalnkiciczbtnpyu.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJuc3VjYWxua2ljaWN6YnRucHl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTU2NDUsImV4cCI6MjA5MDczMTY0NX0.q8jH7PyNPGBLiPKsDiYzwxqu2UryojJ6f9ol--rH2yg';
+const H={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
+
+// Paleta de cores por casa
+const CASAS = {
+  'EstrelaBet': { ac:'#FFD700', ac2:'#0057B8', bg:'rgba(255,215,0,0.08)', bg2:'rgba(0,87,184,0.12)', mid:'rgba(255,215,0,0.3)', fundo:'#0a0a00' },
+  'BetAki':     { ac:'#aed124', ac2:'#8aaa1a', bg:'rgba(174,209,36,0.08)', bg2:'rgba(174,209,36,0.12)', mid:'rgba(174,209,36,0.3)', fundo:'#080a00' },
+  'SuperBet':   { ac:'#E4002B', ac2:'#b30022', bg:'rgba(228,0,43,0.08)', bg2:'rgba(228,0,43,0.12)', mid:'rgba(228,0,43,0.3)', fundo:'#100005' },
+  'Betano':     { ac:'#f23a02', ac2:'#c12e01', bg:'rgba(242,58,2,0.08)', bg2:'rgba(242,58,2,0.12)', mid:'rgba(242,58,2,0.3)', fundo:'#100500' },
+  'default':    { ac:'#00C98D', ac2:'#00A374', bg:'rgba(0,201,141,0.08)', bg2:'rgba(0,201,141,0.12)', mid:'rgba(0,201,141,0.3)', fundo:'#0A0F0D' },
+};
+
+function trocarCasa(nome){
+  const tema = CASAS[nome] || CASAS['default'];
+  const r = document.documentElement.style;
+  r.setProperty('--ac',   tema.ac);
+  r.setProperty('--ac2',  tema.ac2);
+  r.setProperty('--ac-bg',  tema.bg);
+  r.setProperty('--ac-bg2', tema.bg2);
+  r.setProperty('--ac-mid', tema.mid);
+  // Tinge o fundo levemente
+  const tint = document.getElementById('bg-tint');
+  if(nome && CASAS[nome]){
+    tint.style.background = `radial-gradient(ellipse at top, ${tema.ac}18 0%, transparent 70%)`;
+    tint.style.opacity = '1';
+  } else {
+    tint.style.opacity = '0';
+  }
+}
+
+// Inicializa variáveis CSS padrão
+trocarCasa('default');
+
+const toDay=()=>new Date().toISOString().split('T')[0];
+const fmtD=d=>{if(!d)return'-';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`};
+const fmtR=v=>'R$ '+parseFloat(v||0).toFixed(2).replace('.',',');
+const addD=(s,n)=>{const d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().split('T')[0]};
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+async function get(tb,q=''){const r=await fetch(`${SBURL}/rest/v1/${tb}?${q}&order=created_at.desc`,{headers:H});if(!r.ok)throw new Error(await r.text());return r.json()}
+async function post(tb,data){const r=await fetch(`${SBURL}/rest/v1/${tb}`,{method:'POST',headers:H,body:JSON.stringify(data)});if(!r.ok)throw new Error(await r.text());return r.json()}
+async function patch(tb,id,data){const r=await fetch(`${SBURL}/rest/v1/${tb}?id=eq.${id}`,{method:'PATCH',headers:H,body:JSON.stringify(data)});if(!r.ok)throw new Error(await r.text());return r.json()}
+async function del(tb,id){const r=await fetch(`${SBURL}/rest/v1/${tb}?id=eq.${id}`,{method:'DELETE',headers:H});if(!r.ok)throw new Error(await r.text())}
+
+function gerarDeps(meta,inicio){
+  const num=meta<=30?2:meta<=60?3:4;
+  let vals=[],tries=0;
+  while(tries++<300){
+    vals=[];let resto=meta,ok=true;
+    for(let i=0;i<num-1;i++){
+      const mn=Math.max(5,Math.ceil(resto*0.15));
+      const mx=Math.floor(resto*0.55);
+      if(mn>=mx){ok=false;break;}
+      let v=mn+Math.floor(Math.random()*(mx-mn));
+      while(vals.includes(v)&&v<mx)v++;
+      if(vals.includes(v)){ok=false;break;}
+      vals.push(v);resto-=v;
+    }
+    if(!ok)continue;
+    if(resto<5||vals.includes(resto))continue;
+    vals.push(resto);
+    if(new Set(vals).size===vals.length&&vals.every(v=>v>0))break;
+  }
+  let datas=[inicio];
+  for(let i=1;i<vals.length;i++) datas.push(addD(datas[i-1],rnd(1,4)));
+  return vals.map((v,i)=>({valor:v,data_deposito:datas[i],feito:false}));
+}
+
+async function verificarNotificacoes(){
+  try{
+    const hoje=toDay();
+    if(localStorage.getItem('notif_'+hoje)) return;
+    const deps=await get('depositos',`data_deposito=eq.${hoje}&feito=eq.false`);
+    if(!deps.length) return;
+    const ids=[...new Set(deps.map(d=>d.lead_id))];
+    const leads=await get('leads',`id=in.(${ids.join(',')})`);
+    const lm=Object.fromEntries(leads.map(l=>[l.id,l]));
+    document.getElementById('notif-lista').innerHTML=deps.map(d=>{
+      const l=lm[d.lead_id]||{};
+      return`<div class="notif-item"><span style="font-weight:500">${l.nome||'?'} · ${l.casa||''}</span><span style="color:var(--ac);font-weight:700">${fmtR(d.valor)}</span></div>`;
+    }).join('');
+    document.getElementById('notif-overlay').style.display='flex';
+    localStorage.setItem('notif_'+hoje,'1');
+    atualizarBadge(deps.length);
+  }catch(e){}
+}
+
+function atualizarBadge(n){
+  const tab=document.getElementById('tab-hoje');
+  let b=tab.querySelector('.tab-badge');
+  if(n>0){if(!b){b=document.createElement('span');b.className='tab-badge';tab.appendChild(b);}b.textContent=n;}
+  else if(b) b.remove();
+}
+
+function fecharNotif(){ document.getElementById('notif-overlay').style.display='none'; }
+function fecharNotifIrHoje(){ fecharNotif(); goTab('hoje'); }
+
+async function init(){
+  try{
+    await get('leads','limit=1');
+    document.getElementById('sdot').style.background='var(--ac)';
+    document.getElementById('stxt').textContent='online';
+    document.getElementById('fini').value=toDay();
+    renderPainel();
+    setTimeout(verificarNotificacoes,800);
+  }catch(e){
+    document.getElementById('sdot').style.background='var(--perigo)';
+    document.getElementById('stxt').textContent='erro';
+    document.getElementById('sec-painel').innerHTML=`<div class="err">Erro ao conectar: ${e.message}</div>`;
+  }
+}
+
+async function renderPainel(){
+  const el=document.getElementById('sec-painel');
+  try{
+    const[leads,deps]=await Promise.all([get('leads'),get('depositos')]);
+    const valid=leads.filter(l=>l.cpa_validado).length;
+    const ativos=leads.length-valid;
+    const ganho=leads.filter(l=>l.cpa_validado).reduce((s,l)=>s+parseFloat(l.cpa),0);
+    const gasto=deps.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+    const lucro=ganho-gasto;
+    const aDepositar=deps.filter(d=>!d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+    const depsHoje=deps.filter(d=>d.data_deposito===toDay()&&!d.feito);
+    const mediaCPA=leads.length>0?leads.reduce((s,l)=>s+parseFloat(l.cpa),0)/leads.length:130;
+    const projCPA=ativos*mediaCPA*0.8;
+    let avisoHoje='';
+    if(depsHoje.length>0){
+      const ids=[...new Set(depsHoje.map(d=>d.lead_id))];
+      const lh=await get('leads',`id=in.(${ids.join(',')})`);
+      const lm=Object.fromEntries(lh.map(l=>[l.id,l]));
+      avisoHoje=`<div class="aviso-banner">
+        <div class="aviso-banner-titulo">🔔 ${depsHoje.length} depósito${depsHoje.length>1?'s':''} para fazer hoje</div>
+        ${depsHoje.map(d=>{const l=lm[d.lead_id]||{};return`
+          <div class="aviso-item">
+            <div><div class="aviso-nome">${l.nome||'?'}</div><div style="font-size:11px;color:var(--muted)">${l.casa||''}</div></div>
+            <div class="aviso-valor">${fmtR(d.valor)}</div>
+          </div>`}).join('')}
+        <button class="btn btn-verde" style="margin-top:10px" onclick="goTab('hoje')">Fazer depósitos agora →</button>
+      </div>`;
+      atualizarBadge(depsHoje.length);
+    } else { atualizarBadge(0); }
+    el.innerHTML=`<div style="padding-top:12px">
+      ${avisoHoje}
+      <div class="lucro-box">
+        <div class="lucro-label">Lucro líquido acumulado</div>
+        <div class="lucro-valor">${fmtR(lucro)}</div>
+        <div class="lucro-sub">CPA recebido: ${fmtR(ganho)} · Depositado: ${fmtR(gasto)}</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="metric-label">Leads ativos</div><div class="metric-value alerta">${ativos}</div></div>
+        <div class="metric"><div class="metric-label">CPA validados</div><div class="metric-value verde">${valid}</div></div>
+        <div class="metric"><div class="metric-label">Depósitos hoje</div><div class="metric-value ${depsHoje.length>0?'alerta':'verde'}">${depsHoje.length}</div></div>
+        <div class="metric"><div class="metric-label">Taxa sucesso</div><div class="metric-value">${leads.length>0?Math.round(valid/leads.length*100):0}%</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Projeção financeira</div>
+        <div class="info-row"><span style="color:var(--muted)">CPA projetado (80% taxa)</span><span style="color:var(--ac)">${fmtR(projCPA)}</span></div>
+        <div class="info-row"><span style="color:var(--muted)">Ainda a depositar</span><span style="color:var(--alerta)">${fmtR(aDepositar)}</span></div>
+        <div class="info-row"><span style="color:var(--muted)">Lucro projetado total</span><span style="color:var(--ac);font-weight:600">${fmtR(lucro+projCPA-aDepositar)}</span></div>
+      </div>
+    </div>`;
+  }catch(e){el.innerHTML=`<div class="err">Erro: ${e.message}</div>`}
+}
+
+async function salvarLead(){
+  const nome=document.getElementById('fn').value.trim();
+  const tel=document.getElementById('ft').value.trim();
+  const pix=document.getElementById('fp').value.trim();
+  const casa=document.getElementById('fc').value;
+  const cpa=parseFloat(document.getElementById('fcpa').value)||0;
+  const meta=parseFloat(document.getElementById('fmeta').value)||0;
+  const ini=document.getElementById('fini').value;
+  const msg=document.getElementById('fmsg');
+  if(!nome||!tel||!pix||!casa||!cpa||!meta||!ini){msg.innerHTML='<div class="err">Preencha todos os campos!</div>';return}
+  msg.innerHTML='<div class="loading">Salvando...</div>';
+  try{
+    const ls=await post('leads',[{nome,telefone:tel,pix,casa,cpa,meta,cpa_validado:false}]);
+    await post('depositos',gerarDeps(meta,ini).map(d=>({...d,lead_id:ls[0].id})));
+    msg.innerHTML='<div class="succ">✓ Lead salvo! Depósitos gerados com intervalos aleatórios.</div>';
+    ['fn','ft','fp','fcpa','fmeta'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fc').value='';
+    document.getElementById('fini').value=toDay();
+    trocarCasa('default');
+    setTimeout(()=>{msg.innerHTML='';goTab('leads')},1800);
+  }catch(e){msg.innerHTML=`<div class="err">Erro: ${e.message}</div>`}
+}
+
+async function renderHoje(){
+  const el=document.getElementById('sec-hoje');
+  el.innerHTML='<div class="loading">Carregando...</div>';
+  try{
+    const deps=await get('depositos',`data_deposito=eq.${toDay()}&feito=eq.false`);
+    if(!deps.length){atualizarBadge(0);el.innerHTML='<div class="empty">Nenhum depósito para hoje 🎉<br><span style="font-size:11px;color:var(--muted)">Aproveite o dia!</span></div>';return}
+    atualizarBadge(deps.length);
+    const ids=[...new Set(deps.map(d=>d.lead_id))];
+    const leads=await get('leads',`id=in.(${ids.join(',')})`);
+    const lm=Object.fromEntries(leads.map(l=>[l.id,l]));
+    el.innerHTML=deps.map(d=>{
+      const l=lm[d.lead_id]||{};
+      const tema=CASAS[l.casa]||CASAS['default'];
+      return`<div class="hoje-card" style="border-color:${tema.ac}">
+        <div class="hoje-titulo" style="color:${tema.ac}">${l.casa||'?'} · Depositar hoje</div>
+        <div class="hoje-nome">${l.nome||'?'}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">${l.telefone||''}</div>
+        <div class="hoje-valor" style="color:${tema.ac}">${fmtR(d.valor)}</div>
+        <div style="font-size:11px;color:var(--muted)">Chave PIX — clique para copiar:</div>
+        <div class="pix-box" onclick="copiarPIX(this,'${(l.pix||'').replace(/'/g,"\\'")}')">${l.pix||'—'}</div>
+        <button class="btn btn-verde" style="margin-top:12px;background:${tema.ac}" onclick="marcarFeito('${d.id}','${d.lead_id}')">✓ Confirmar depósito feito</button>
+      </div>`
+    }).join('');
+  }catch(e){el.innerHTML=`<div class="err">Erro: ${e.message}</div>`}
+}
+
+function copiarPIX(el,pix){
+  navigator.clipboard.writeText(pix).catch(()=>{});
+  const orig=el.innerHTML;
+  el.innerHTML='✓ Copiado!';el.style.color='var(--ac)';el.style.borderColor='var(--ac)';
+  setTimeout(()=>{el.innerHTML=orig;el.style.color='';el.style.borderColor=''},2000);
+}
+
+async function marcarFeito(depId,leadId){
+  try{
+    await patch('depositos',depId,{feito:true});
+    const[deps,lArr]=await Promise.all([get('depositos',`lead_id=eq.${leadId}`),get('leads',`id=eq.${leadId}`)]);
+    const tf=deps.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+    if(tf>=parseFloat(lArr[0].meta))await patch('leads',leadId,{cpa_validado:true});
+    renderHoje();renderPainel();
+  }catch(e){alert('Erro: '+e.message)}
+}
+
+async function renderLeads(){
+  const el=document.getElementById('sec-leads');
+  el.innerHTML='<div class="loading">Carregando...</div>';
+  try{
+    const[leads,deps]=await Promise.all([get('leads'),get('depositos')]);
+    if(!leads.length){el.innerHTML='<div class="empty">Nenhum lead ainda.<br><span style="font-size:11px">Use "+ Lead" para cadastrar</span></div>';return}
+    const dm={};deps.forEach(d=>{if(!dm[d.lead_id])dm[d.lead_id]=[];dm[d.lead_id].push(d)});
+    el.innerHTML=leads.map(l=>{
+      const lds=dm[l.id]||[];
+      const feito=lds.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+      const pct=l.meta>0?Math.min(100,Math.round(feito/parseFloat(l.meta)*100)):0;
+      const pend=lds.filter(d=>!d.feito&&d.data_deposito>=toDay()).length;
+      const tema=CASAS[l.casa]||CASAS['default'];
+      return`<div class="lead-card" style="border-left:3px solid ${tema.ac}" onclick="verLead('${l.id}')">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="lead-name">${l.nome}</div>
+            <div class="lead-meta" style="display:flex;align-items:center;gap:6px;margin-top:4px">
+              <span style="width:6px;height:6px;border-radius:50%;background:${tema.ac};display:inline-block"></span>
+              ${l.casa} · ${l.telefone}
+            </div>
+          </div>
+          <span class="badge ${l.cpa_validado?'badge-ok':pend>0?'badge-pend':'badge-fail'}" style="${l.cpa_validado?`background:${tema.bg};color:${tema.ac}`:''}">
+            ${l.cpa_validado?'CPA ✓':pend+' pend.'}
+          </span>
+        </div>
+        <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:${pct}%;background:${tema.ac}"></div></div>
+        <div class="progress-info"><span>${fmtR(feito)} de ${fmtR(l.meta)}</span><span>${pct}%</span></div>
+      </div>`
+    }).join('');
+  }catch(e){el.innerHTML=`<div class="err">Erro: ${e.message}</div>`}
+}
+
+async function verLead(id){
+  goTabRaw('detalhe');
+  const el=document.getElementById('sec-detalhe');
+  el.innerHTML='<div class="loading">Carregando...</div>';
+  try{
+    const[lArr,deps]=await Promise.all([get('leads',`id=eq.${id}`),get('depositos',`lead_id=eq.${id}&order=data_deposito.asc`)]);
+    const l=lArr[0];
+    const tema=CASAS[l.casa]||CASAS['default'];
+    const feito=deps.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+    const pct=l.meta>0?Math.min(100,Math.round(feito/parseFloat(l.meta)*100)):0;
+    el.innerHTML=`
+      <button class="back-btn" onclick="goTab('leads')">← Voltar</button>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span style="width:10px;height:10px;border-radius:50%;background:${tema.ac};display:inline-block"></span>
+        <div class="detalhe-title" style="margin:0">${l.nome}</div>
+      </div>
+      <div class="card">
+        <div class="info-row"><span style="color:var(--muted)">Telefone</span><span>${l.telefone}</span></div>
+        <div class="info-row"><span style="color:var(--muted)">PIX</span><span style="color:var(--azul);font-family:'DM Mono',monospace;font-size:12px">${l.pix}</span></div>
+        <div class="info-row"><span style="color:var(--muted)">Casa</span><span style="color:${tema.ac};font-weight:600">${l.casa}</span></div>
+        <div class="info-row"><span style="color:var(--muted)">CPA esperado</span><span style="color:${tema.ac};font-weight:600">${fmtR(l.cpa)}</span></div>
+        <div class="info-row"><span style="color:var(--muted)">Meta depósito</span><span>${fmtR(l.meta)}</span></div>
+        ${l.cpa_validado?`<div class="cpa-validado-banner" style="border-color:${tema.ac};color:${tema.ac};background:${tema.bg}">✓ CPA VALIDADO · Lucro: ${fmtR(parseFloat(l.cpa)-feito)}</div>`:''}
+      </div>
+      <div class="card">
+        <div class="card-title">Depósitos</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px">
+          <span>${fmtR(feito)} de ${fmtR(l.meta)}</span><span>${pct}%</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" style="width:${pct}%;background:${tema.ac}"></div></div>
+        ${deps.map(d=>`<div class="dep-item">
+          <div>
+            <div class="dep-data">${fmtD(d.data_deposito)}</div>
+            <div class="dep-valor" style="color:${d.feito?'var(--muted)':'var(--texto)'}">${fmtR(d.valor)}</div>
+          </div>
+          <button class="btn-sm ${d.feito?'btn-desfazer':'btn-ok'}" style="${!d.feito?`background:${tema.bg};color:${tema.ac}`:''}" onclick="toggleDep('${d.id}','${l.id}','${id}',${d.feito})">
+            ${d.feito?'Desfazer':'✓ Feito'}
+          </button>
+        </div>`).join('')}
+      </div>
+      <button class="btn btn-outline" onclick="deletarLead('${l.id}')">Remover lead</button>`;
+  }catch(e){el.innerHTML=`<div class="err">Erro: ${e.message}</div>`}
+}
+
+async function toggleDep(depId,leadId,navId,feito){
+  try{
+    await patch('depositos',depId,{feito:!feito});
+    const[deps,lArr]=await Promise.all([get('depositos',`lead_id=eq.${leadId}`),get('leads',`id=eq.${leadId}`)]);
+    const tf=deps.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+    await patch('leads',leadId,{cpa_validado:tf>=parseFloat(lArr[0].meta)});
+    verLead(navId);renderPainel();
+  }catch(e){alert('Erro: '+e.message)}
+}
+
+async function deletarLead(id){
+  if(!confirm('Remover este lead?'))return;
+  try{await del('leads',id);goTab('leads');renderPainel()}
+  catch(e){alert('Erro: '+e.message)}
+}
+
+function goTab(t){
+  document.querySelectorAll('.tab').forEach((el,i)=>{el.classList.toggle('active',['painel','novo','hoje','leads'][i]===t)});
+  goTabRaw(t);
+  if(t==='painel')renderPainel();
+  if(t==='hoje')renderHoje();
+  if(t==='leads')renderLeads();
+}
+function goTabRaw(t){
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.getElementById('sec-'+t).classList.add('active');
+}
+
+init();
+</script>
+</body>
+</html>
