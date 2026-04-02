@@ -108,6 +108,15 @@ select option{background:#111712}
 /* Fundo com cor suave da casa */
 .bg-tint{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity var(--transition-speed) ease}
 .app{position:relative;z-index:1}
+
+/* Autocomplete */
+.ac-wrap{position:relative}
+.ac-lista{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--ac);border-top:none;border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;display:none}
+.ac-item{padding:10px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--borda);transition:background .15s}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover{background:var(--card2)}
+.ac-item strong{color:var(--ac)}
+.ac-item span{color:var(--muted);font-size:11px;display:block;margin-top:2px}
 </style>
 </head>
 <body>
@@ -136,11 +145,22 @@ select option{background:#111712}
       <div class="card-title">Cadastrar novo lead</div>
       <div id="fmsg"></div>
       <div class="row2">
-        <div><label>Nome</label><input id="fn" placeholder="Ex: Dona Maria"></div>
-        <div><label>Telefone</label><input id="ft" placeholder="11999999999"></div>
+        <div class="ac-wrap">
+          <label>Nome</label>
+          <input id="fn" placeholder="Ex: Dona Maria" autocomplete="off" oninput="acBuscar('nome',this.value)" onblur="acFechar(300)">
+          <div class="ac-lista" id="ac-nome"></div>
+        </div>
+        <div class="ac-wrap">
+          <label>Telefone</label>
+          <input id="ft" placeholder="11999999999" autocomplete="off" oninput="acBuscar('tel',this.value)" onblur="acFechar(300)">
+          <div class="ac-lista" id="ac-tel"></div>
+        </div>
       </div>
-      <label>Chave PIX</label>
-      <input id="fp" placeholder="CPF, telefone ou email">
+      <div class="ac-wrap">
+        <label>Chave PIX</label>
+        <input id="fp" placeholder="CPF, telefone ou email" autocomplete="off" oninput="acBuscar('pix',this.value)" onblur="acFechar(300)">
+        <div class="ac-lista" id="ac-pix"></div>
+      </div>
       <div class="row2">
         <div>
           <label>Casa de apostas</label>
@@ -150,6 +170,8 @@ select option{background:#111712}
             <option value="BetAki">BetAki</option>
             <option value="SuperBet">SuperBet</option>
             <option value="Betano">Betano</option>
+            <option value="JonBet">JonBet</option>
+            <option value="Blaze">Blaze</option>
           </select>
         </div>
         <div><label>CPA esperado (R$)</label><input id="fcpa" type="number" placeholder="130"></div>
@@ -185,12 +207,59 @@ const SBURL='https://bnsucalnkiciczbtnpyu.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJuc3VjYWxua2ljaWN6YnRucHl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTU2NDUsImV4cCI6MjA5MDczMTY0NX0.q8jH7PyNPGBLiPKsDiYzwxqu2UryojJ6f9ol--rH2yg';
 const H={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
 
+// Cache de leads para autocomplete
+let leadsCache = [];
+
+async function carregarCacheLeads(){
+  try{ leadsCache = await get('leads',''); }catch(e){}
+}
+
+function acBuscar(campo, valor){
+  if(valor.length < 1){ acFechar(0); return; }
+  const v = valor.toLowerCase();
+  let resultados = leadsCache.filter(l => {
+    if(campo === 'nome') return l.nome && l.nome.toLowerCase().includes(v);
+    if(campo === 'tel')  return l.telefone && l.telefone.includes(v);
+    if(campo === 'pix')  return l.pix && l.pix.toLowerCase().includes(v);
+    return false;
+  }).slice(0, 6);
+
+  const listaId = campo === 'nome' ? 'ac-nome' : campo === 'tel' ? 'ac-tel' : 'ac-pix';
+  const lista = document.getElementById(listaId);
+
+  if(!resultados.length){ lista.style.display='none'; return; }
+
+  lista.innerHTML = resultados.map(l => `
+    <div class="ac-item" onmousedown="acSelecionar('${l.id}')">
+      <strong>${l.nome}</strong>
+      <span>${l.telefone} · ${l.pix}</span>
+    </div>`).join('');
+  lista.style.display = 'block';
+}
+
+function acSelecionar(id){
+  const l = leadsCache.find(x => x.id === id);
+  if(!l) return;
+  document.getElementById('fn').value = l.nome || '';
+  document.getElementById('ft').value = l.telefone || '';
+  document.getElementById('fp').value = l.pix || '';
+  acFechar(0);
+}
+
+function acFechar(delay){
+  setTimeout(()=>{
+    document.querySelectorAll('.ac-lista').forEach(el => el.style.display='none');
+  }, delay);
+}
+
 // Paleta de cores por casa
 const CASAS = {
-  'EstrelaBet': { ac:'#FFD700', ac2:'#0057B8', bg:'rgba(255,215,0,0.08)', bg2:'rgba(0,87,184,0.12)', mid:'rgba(255,215,0,0.3)', fundo:'#0a0a00' },
+  'EstrelaBet': { ac:'#fadf87', ac2:'#d4b85a', bg:'rgba(250,223,135,0.08)', bg2:'rgba(250,223,135,0.12)', mid:'rgba(250,223,135,0.3)', fundo:'#0a0900' },
   'BetAki':     { ac:'#aed124', ac2:'#8aaa1a', bg:'rgba(174,209,36,0.08)', bg2:'rgba(174,209,36,0.12)', mid:'rgba(174,209,36,0.3)', fundo:'#080a00' },
-  'SuperBet':   { ac:'#E4002B', ac2:'#b30022', bg:'rgba(228,0,43,0.08)', bg2:'rgba(228,0,43,0.12)', mid:'rgba(228,0,43,0.3)', fundo:'#100005' },
-  'Betano':     { ac:'#f23a02', ac2:'#c12e01', bg:'rgba(242,58,2,0.08)', bg2:'rgba(242,58,2,0.12)', mid:'rgba(242,58,2,0.3)', fundo:'#100500' },
+  'SuperBet':   { ac:'#470301', ac2:'#2e0200', bg:'rgba(71,3,1,0.15)', bg2:'rgba(71,3,1,0.2)', mid:'rgba(71,3,1,0.4)', fundo:'#0f0000' },
+  'Betano':     { ac:'#ff5100', ac2:'#cc4100', bg:'rgba(255,81,0,0.08)', bg2:'rgba(255,81,0,0.12)', mid:'rgba(255,81,0,0.3)', fundo:'#100400' },
+  'JonBet':     { ac:'#31f545', ac2:'#22c433', bg:'rgba(49,245,69,0.08)', bg2:'rgba(49,245,69,0.12)', mid:'rgba(49,245,69,0.3)', fundo:'#001005' },
+  'Blaze':      { ac:'#f53d3d', ac2:'#c42e2e', bg:'rgba(245,61,61,0.08)', bg2:'rgba(245,61,61,0.12)', mid:'rgba(245,61,61,0.3)', fundo:'#100000' },
   'default':    { ac:'#00C98D', ac2:'#00A374', bg:'rgba(0,201,141,0.08)', bg2:'rgba(0,201,141,0.12)', mid:'rgba(0,201,141,0.3)', fundo:'#0A0F0D' },
 };
 
@@ -286,6 +355,7 @@ async function init(){
     document.getElementById('stxt').textContent='online';
     document.getElementById('fini').value=toDay();
     renderPainel();
+    carregarCacheLeads();
     setTimeout(verificarNotificacoes,800);
   }catch(e){
     document.getElementById('sdot').style.background='var(--perigo)';
@@ -511,6 +581,7 @@ function goTab(t){
   if(t==='painel')renderPainel();
   if(t==='hoje')renderHoje();
   if(t==='leads')renderLeads();
+  if(t==='novo')carregarCacheLeads();
 }
 function goTabRaw(t){
   document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
