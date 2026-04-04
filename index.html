@@ -648,13 +648,9 @@ async function init(){
     document.getElementById('sdot').style.background='var(--ac)';
     document.getElementById('stxt').textContent='online';
     document.getElementById('fini').value=toDay();
-    if(isMobile()){
-      initMobile();
-    } else {
-      renderPainel();
-      carregarCacheLeads();
-      setTimeout(verificarNotificacoes,800);
-    }
+    renderPainel();
+    carregarCacheLeads();
+    setTimeout(verificarNotificacoes,800);
   }catch(e){
     document.getElementById('sdot').style.background='var(--perigo)';
     document.getElementById('stxt').textContent='erro';
