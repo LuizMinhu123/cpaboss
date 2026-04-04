@@ -23,7 +23,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--fundo);color:var(--texto)
 .st span{color:#D2AC47;font-weight:300}
 .sl{animation:lineGrow .5s ease 1s both;height:1px;background:#D2AC47;margin:0 auto}
 .ss{animation:subFade .5s ease 1.2s both;font-size:11px;color:#8a7a4a;letter-spacing:3px;text-transform:uppercase}
-#login-selector{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;flex-direction:column;gap:20px}
+#login-selector{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;flex-direction:column;gap:20px;overflow:hidden}
+#ls-canvas{position:absolute;inset:0;z-index:0;pointer-events:none}
+#ls-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:20px}
+#ls-grid{position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(210,172,71,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(210,172,71,.04) 1px,transparent 1px);background-size:48px 48px}
+#ls-vignette{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 40%,#000 100%)}
 .sel-logo{font-size:32px;font-weight:800;color:#fff;text-align:center}
 .sel-logo span{color:#D2AC47;font-weight:300}
 .sel-sub{font-size:12px;color:#8a7a4a;text-align:center;text-transform:uppercase;letter-spacing:2px;margin-bottom:24px}
@@ -209,6 +213,10 @@ select option{background:#111}
 </div>
 
 <div id="login-selector">
+  <canvas id="ls-canvas"></canvas>
+  <div id="ls-grid"></div>
+  <div id="ls-vignette"></div>
+  <div id="ls-content">
   <div>
     <div class="sel-logo">CPA<span>boss</span></div>
     <div class="sel-sub">Escolha seu tipo de acesso</div>
@@ -224,6 +232,7 @@ select option{background:#111}
       <div class="sel-card-title">Afiliado</div>
       <div class="sel-card-sub">Acesso ao seu painel</div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -320,7 +329,7 @@ function mostrarLogin(tipo){
 }
 function voltarSelector(){
   document.getElementById('login-overlay').style.display='none';
-  document.getElementById('login-selector').style.display='flex';
+  document.getElementById('login-selector').style.display='flex';initParticles();
   document.getElementById('lerr').style.display='none';
   document.getElementById('l-user').value='';document.getElementById('l-pass').value='';
 }
@@ -1041,6 +1050,51 @@ async function renderAfilLeads(){
       </div>`;
     }).join('');
   }catch(e){mb.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
+}
+
+
+// Partículas douradas no seletor
+function initParticles(){
+  const canvas=document.getElementById('ls-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+  const particles=Array.from({length:55},()=>({
+    x:Math.random()*canvas.width,y:Math.random()*canvas.height,
+    r:Math.random()*1.8+.4,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    o:Math.random()*.5+.1,
+    pulse:Math.random()*Math.PI*2
+  }));
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.pulse+=.012;
+      if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+      if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+      const alpha=p.o*(0.6+0.4*Math.sin(p.pulse));
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(210,172,71,${alpha})`;ctx.fill();
+    });
+    // linhas entre partículas próximas
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<120){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(210,172,71,${.06*(1-dist/120)})`;
+          ctx.lineWidth=.5;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
 }
 
 // SPLASH → SELETOR
