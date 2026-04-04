@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--ac:#D2AC47;--ac2:#b8942e;--fundo:#000;--card:#0d0d0d;--card2:#111;--borda:#2a2200;--texto:#F5F0E8;--muted:#8a7a4a;--perigo:#FF5C5C;--alerta:#FFB347;--azul:#4A9EFF;--ts:0.4s}
-body{font-family:'DM Sans',sans-serif;background:var(--fundo);color:var(--texto);min-height:100dvh;font-size:14px}
+:root{--ac:#D2AC47;--ac2:#b8942e;--fundo:#000;--card:#0d0d0d;--card2:#111;--borda:#2a2200;--texto:#F5F0E8;--muted:#8a7a4a;--perigo:#FF5C5C;--alerta:#FFB347;--azul:#4A9EFF;--sidebar:240px}
+body{font-family:'DM Sans',sans-serif;background:var(--fundo);color:var(--texto);min-height:100dvh;font-size:14px;overflow-x:hidden}
 
 /* SPLASH */
 #splash{position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}
@@ -16,7 +16,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--fundo);color:var(--texto)
 @keyframes textFade{0%{opacity:0;letter-spacing:12px}100%{opacity:1;letter-spacing:-1px}}
 @keyframes subFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 @keyframes lineGrow{0%{width:0}100%{width:120px}}
-@keyframes splashOut{0%{opacity:1}100%{opacity:0;pointer-events:none}}
+@keyframes splashOut{0%{opacity:1}100%{opacity:0}}
 .splash-crown{animation:crownDrop 0.7s cubic-bezier(.22,1,.36,1) 0.2s both}
 .splash-text{animation:textFade 0.7s cubic-bezier(.22,1,.36,1) 0.7s both;font-size:52px;font-weight:800;color:#fff}
 .splash-text span{color:#D2AC47;font-weight:300}
@@ -24,7 +24,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--fundo);color:var(--texto)
 .splash-sub{animation:subFade 0.5s ease 1.2s both;font-size:11px;color:#8a7a4a;letter-spacing:3px;text-transform:uppercase}
 
 /* LOGIN */
-#login-overlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9998;padding:20px;display:none}
+#login-overlay{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:9998;padding:20px}
 .login-box{background:#0d0d0d;border:1px solid #D2AC47;border-radius:16px;padding:36px 28px;width:100%;max-width:340px}
 .login-crown{text-align:center;margin-bottom:12px}
 .login-logo{font-size:28px;font-weight:800;color:#fff;text-align:center;margin-bottom:4px}
@@ -37,108 +37,151 @@ body{font-family:'DM Sans',sans-serif;background:var(--fundo);color:var(--texto)
 .login-btn{width:100%;padding:13px;border-radius:10px;background:#D2AC47;color:#000;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background .2s}
 .login-btn:hover{background:#b8942e}
 
-/* APP */
-.app{max-width:520px;margin:0 auto;padding:0 0 80px}
-.header{padding:20px 16px 0;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:20px;font-weight:800;letter-spacing:-0.5px}
-.logo-cpa{color:#fff}
-.logo-boss{color:#D2AC47;font-weight:300}
-.sdot{width:8px;height:8px;border-radius:50%;background:var(--alerta);animation:pulse 2s infinite}
+/* LAYOUT */
+.layout{display:flex;min-height:100dvh}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:#0a0800;border-right:1px solid #2a2200;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100dvh;z-index:100;transition:transform .3s ease}
+.sidebar.closed{transform:translateX(calc(-1 * var(--sidebar)))}
+.sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid #2a2200}
+.sidebar-logo-text{font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+.sidebar-logo-text span{color:#D2AC47;font-weight:300}
+.sidebar-logo-sub{font-size:10px;color:#8a7a4a;text-transform:uppercase;letter-spacing:2px;margin-top:2px}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:all .2s;border-left:3px solid transparent;color:var(--muted);font-size:13px;font-weight:500}
+.nav-item:hover{background:#111;color:var(--texto)}
+.nav-item.active{background:#111;color:#D2AC47;border-left-color:#D2AC47}
+.nav-icon{font-size:18px;width:22px;text-align:center}
+.nav-label{flex:1}
+.sidebar-footer{padding:16px 20px;border-top:1px solid #2a2200;font-size:11px;color:#8a7a4a;display:flex;align-items:center;gap:6px}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--alerta);animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* TABS */
-.tabs{display:flex;gap:4px;padding:14px 16px;border-bottom:1px solid var(--borda)}
-.tab{flex:1;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--muted);transition:all var(--ts);position:relative}
-.tab.active{background:var(--card2);color:var(--ac);border:1px solid var(--borda)}
-.tab-badge{position:absolute;top:-4px;right:4px;background:var(--perigo);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:99px;min-width:16px;text-align:center}
+/* TOGGLE BUTTON */
+.sidebar-toggle{position:fixed;top:16px;left:16px;z-index:200;background:#0a0800;border:1px solid #2a2200;color:#D2AC47;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.sidebar-toggle:hover{background:#111}
+.sidebar-toggle.open{left:calc(var(--sidebar) + 16px)}
+
+/* OVERLAY MOBILE */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none}
+.sidebar-overlay.active{display:block}
+
+/* MAIN CONTENT */
+.main{flex:1;margin-left:var(--sidebar);transition:margin .3s ease;min-height:100dvh}
+.main.expanded{margin-left:0}
+.main-header{padding:16px 20px;border-bottom:1px solid #2a2200;display:flex;align-items:center;gap:12px;background:#000;position:sticky;top:0;z-index:50}
+.main-header-title{font-size:16px;font-weight:600;color:var(--texto)}
+.main-header-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.main-body{padding:20px;max-width:760px}
 
 /* SECTIONS */
-.section{display:none;padding:16px}
+.section{display:none}
 .section.active{display:block}
 
 /* CARDS */
-.card{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:16px;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:16px;margin-bottom:12px}
 .card-title{font-size:13px;font-weight:600;margin-bottom:12px}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .metric{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:14px}
 .metric-label{font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-.metric-value{font-size:24px;font-weight:600}
-.mv-ac{color:var(--ac)}
+.metric-value{font-size:26px;font-weight:700}
+.mv-ac{color:#D2AC47}
 .mv-al{color:var(--alerta)}
-.lucro-box{background:#0a0800;border:1px solid #3a2e00;border-radius:12px;padding:16px;text-align:center;margin-bottom:14px}
-.lucro-label{font-size:11px;color:var(--ac);text-transform:uppercase;letter-spacing:.5px}
-.lucro-valor{font-size:32px;font-weight:800;color:var(--ac);margin:4px 0}
-.lucro-sub{font-size:11px;color:var(--muted)}
-.info-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--borda)}
+.lucro-box{background:#0a0800;border:1px solid #3a2e00;border-radius:12px;padding:20px;text-align:center;margin-bottom:16px}
+.lucro-label{font-size:11px;color:#D2AC47;text-transform:uppercase;letter-spacing:.5px}
+.lucro-valor{font-size:36px;font-weight:800;color:#D2AC47;margin:4px 0}
+.lucro-sub{font-size:12px;color:var(--muted)}
+.info-row{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--borda)}
 .info-row:last-child{border-bottom:none}
+
+/* AVISO */
+.aviso-banner{background:#0d0900;border:2px solid #D2AC47;border-radius:12px;padding:16px;margin-bottom:16px}
+.aviso-titulo{font-size:12px;color:#D2AC47;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.aviso-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--borda)}
+.aviso-item:last-child{border-bottom:none}
+.aviso-valor{font-size:16px;font-weight:700;color:#D2AC47}
 
 /* FORM */
 label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;margin-top:10px}
 label:first-child{margin-top:0}
-input,select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--borda);background:var(--card2);color:var(--texto);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
-input:focus,select:focus{border-color:var(--ac)}
+input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--borda);background:var(--card2);color:var(--texto);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:#D2AC47}
 select option{background:#111}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .sep{height:1px;background:var(--borda);margin:14px 0}
 .hint{font-size:12px;color:var(--muted);line-height:1.7}
 
 /* BUTTONS */
 .btn{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all .2s;margin-top:14px}
-.btn-ac{background:var(--ac);color:#000}
-.btn-ac:hover{background:var(--ac2)}
+.btn-ac{background:#D2AC47;color:#000}
+.btn-ac:hover{background:#b8942e}
 .btn-outline{background:transparent;border:1px solid var(--borda);color:var(--muted)}
+.btn-green{background:#1a3a1a;color:#4CAF50;border:1px solid #2a4a2a}
 .btn-sm{padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;border:none;cursor:pointer}
-.btn-ok{background:#1a1000;color:var(--ac);border:1px solid #3a2e00}
+.btn-ok{background:#1a1000;color:#D2AC47;border:1px solid #3a2e00}
 .btn-desfazer{background:var(--card2);color:var(--muted);border:1px solid var(--borda)}
+.btn-row{display:flex;gap:8px;margin-top:14px}
+.btn-row .btn{margin-top:0}
 
 /* LEADS */
 .lead-card{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
-.lead-card:hover{border-color:var(--ac)}
+.lead-card:hover{border-color:#D2AC47}
 .lead-name{font-size:15px;font-weight:600}
 .lead-meta{font-size:12px;color:var(--muted);margin-top:2px}
 .progress-bar{height:4px;background:var(--borda);border-radius:99px;overflow:hidden;margin-top:8px}
-.progress-fill{height:100%;border-radius:99px;background:var(--ac);transition:width .4s}
+.progress-fill{height:100%;border-radius:99px;background:#D2AC47;transition:width .4s}
 .progress-info{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
 .badge{display:inline-block;font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;text-transform:uppercase}
-.badge-ok{background:#1a1000;color:var(--ac)}
+.badge-ok{background:#1a1000;color:#D2AC47}
 .badge-pend{background:#2a1e00;color:var(--alerta)}
 .badge-fail{background:#2a0000;color:var(--perigo)}
 
 /* HOJE */
-.hoje-card{background:var(--card);border:2px solid var(--ac);border-radius:12px;padding:16px;margin-bottom:12px}
-.hoje-titulo{font-size:11px;color:var(--ac);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.hoje-card{background:var(--card);border:2px solid #D2AC47;border-radius:12px;padding:16px;margin-bottom:12px}
+.hoje-titulo{font-size:11px;color:#D2AC47;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .hoje-nome{font-size:16px;font-weight:600}
-.hoje-valor{font-size:30px;font-weight:800;color:var(--ac);margin:8px 0 4px}
+.hoje-valor{font-size:30px;font-weight:800;color:#D2AC47;margin:8px 0 4px}
 .pix-box{background:var(--card2);border:1px solid var(--borda);border-radius:8px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--azul);cursor:pointer;margin-top:8px;word-break:break-all;transition:all .2s}
 
 /* DETALHE */
 .back-btn{background:var(--card2);border:1px solid var(--borda);color:var(--texto);padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;margin-bottom:14px}
-.detalhe-title{font-size:18px;font-weight:700;margin-bottom:14px}
 .dep-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--borda)}
 .dep-item:last-child{border-bottom:none}
 .dep-data{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
 .dep-valor{font-size:15px;font-weight:600;margin-top:2px}
-.cpa-banner{background:#1a1000;border:1px solid var(--ac);border-radius:10px;padding:12px;text-align:center;color:var(--ac);font-weight:600;font-size:14px;margin-top:10px}
+.cpa-banner{background:#1a1000;border:1px solid #D2AC47;border-radius:10px;padding:12px;text-align:center;color:#D2AC47;font-weight:600;font-size:14px;margin-top:10px}
 
-/* AVISO */
-.aviso-banner{background:#0d0900;border:2px solid var(--ac);border-radius:12px;padding:16px;margin-bottom:16px}
-.aviso-titulo{font-size:12px;color:var(--ac);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.aviso-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--borda)}
-.aviso-item:last-child{border-bottom:none}
-.aviso-valor{font-size:16px;font-weight:700;color:var(--ac)}
+/* UPLOAD PRINTS */
+.upload-area{border:2px dashed var(--borda);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:12px}
+.upload-area:hover,.upload-area.drag{border-color:#D2AC47;background:#0a0800}
+.upload-area input{display:none}
+.upload-icon{font-size:32px;margin-bottom:8px}
+.upload-text{font-size:13px;color:var(--muted)}
+.upload-text strong{color:var(--texto);display:block;margin-bottom:4px}
+.print-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}
+.print-item{position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--borda)}
+.print-item img{width:100%;height:90px;object-fit:cover;display:block}
+.print-status{position:absolute;bottom:0;left:0;right:0;padding:4px 6px;font-size:10px;font-weight:600;text-align:center}
+.status-ok{background:rgba(0,180,0,.85);color:#fff}
+.status-fail{background:rgba(220,0,0,.85);color:#fff}
+.status-checking{background:rgba(210,172,71,.85);color:#000}
+.ia-result{border-radius:8px;padding:12px;font-size:13px;margin-top:8px;line-height:1.6}
+.ia-ok{background:#0a1a0a;border:1px solid #2a4a2a;color:#4CAF50}
+.ia-fail{background:#1a0a0a;border:1px solid #4a2a2a;color:#FF5C5C}
+.ia-checking{background:#1a1000;border:1px solid #3a2e00;color:#D2AC47}
 
 /* AUTOCOMPLETE */
 .ac-wrap{position:relative}
-.ac-lista{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--ac);border-top:none;border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;display:none}
+.ac-lista{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid #D2AC47;border-top:none;border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;display:none}
 .ac-item{padding:10px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--borda)}
 .ac-item:hover{background:var(--card2)}
-.ac-item strong{color:var(--ac)}
+.ac-item strong{color:#D2AC47}
 .ac-item span{color:var(--muted);font-size:11px;display:block;margin-top:2px}
 
 /* NOTIF */
 .notif-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:9997;padding:20px}
-.notif-box{background:var(--card);border:2px solid var(--ac);border-radius:16px;padding:24px;width:100%;max-width:360px}
-.notif-titulo{font-size:16px;font-weight:700;color:var(--ac);text-align:center;margin-bottom:6px}
+.notif-box{background:var(--card);border:2px solid #D2AC47;border-radius:16px;padding:24px;width:100%;max-width:360px}
+.notif-titulo{font-size:16px;font-weight:700;color:#D2AC47;text-align:center;margin-bottom:6px}
 .notif-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.6}
 .notif-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borda);font-size:13px}
 .notif-item:last-child{border-bottom:none}
@@ -147,7 +190,23 @@ select option{background:#111}
 .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;line-height:2}
 .loading{text-align:center;padding:30px;color:var(--muted);font-size:13px}
 .err{background:#1a0000;border:1px solid #550000;border-radius:8px;padding:12px;color:var(--perigo);font-size:12px;margin-bottom:12px;line-height:1.6}
-.succ{background:#1a1000;border:1px solid #3a2e00;border-radius:8px;padding:12px;color:var(--ac);font-size:12px;margin-bottom:12px}
+.succ{background:#1a1000;border:1px solid #3a2e00;border-radius:8px;padding:12px;color:#D2AC47;font-size:12px;margin-bottom:12px}
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:99px;margin-right:4px;margin-bottom:4px}
+
+/* PLANILHA BTN */
+.export-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:#1a1a00;border:1px solid #3a3a00;color:#D2AC47;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
+.export-btn:hover{background:#2a2a00}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .sidebar{width:80vw;--sidebar:80vw}
+  .sidebar.closed{transform:translateX(-80vw)}
+  .main{margin-left:0}
+  .main.expanded{margin-left:0}
+  .sidebar-toggle.open{left:calc(80vw + 12px)}
+  .metrics{grid-template-columns:1fr 1fr}
+  .row2{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -201,75 +260,154 @@ select option{background:#111}
   </div>
 </div>
 
-<!-- APP -->
-<div class="app">
-  <div class="header">
-    <div class="logo"><span class="logo-cpa">CPA</span><span class="logo-boss">boss</span></div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+<!-- LAYOUT -->
+<div class="layout" id="layout" style="display:none">
+
+  <!-- SIDEBAR OVERLAY MOBILE -->
+  <div class="sidebar-overlay" id="sb-overlay" onclick="fecharSidebar()"></div>
+
+  <!-- TOGGLE BUTTON -->
+  <button class="sidebar-toggle" id="sb-toggle" onclick="toggleSidebar()">☰</button>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-text">CPA<span>boss</span></div>
+      <div class="sidebar-logo-sub">Sistema de leads</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="goTab('painel')" id="nav-painel">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Painel</span>
+      </div>
+      <div class="nav-item" onclick="goTab('novo')" id="nav-novo">
+        <span class="nav-icon">➕</span>
+        <span class="nav-label">Novo lead</span>
+      </div>
+      <div class="nav-item" onclick="goTab('hoje')" id="nav-hoje">
+        <span class="nav-icon">💰</span>
+        <span class="nav-label">Depósitos hoje</span>
+        <span id="sb-badge" style="background:#FF5C5C;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px;display:none"></span>
+      </div>
+      <div class="nav-item" onclick="goTab('leads')" id="nav-leads">
+        <span class="nav-icon">👥</span>
+        <span class="nav-label">Leads</span>
+      </div>
+      <div class="nav-item" onclick="goTab('planilha')" id="nav-planilha">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Planilha</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
       <div class="sdot" id="sdot"></div>
       <span id="stxt">conectando...</span>
     </div>
   </div>
-  <div class="tabs">
-    <button class="tab active" onclick="goTab('painel')">Painel</button>
-    <button class="tab" onclick="goTab('novo')">+ Lead</button>
-    <button class="tab" id="tab-hoje" onclick="goTab('hoje')">Hoje</button>
-    <button class="tab" onclick="goTab('leads')">Leads</button>
-  </div>
-  <div id="sec-painel" class="section active"><div class="loading">Carregando...</div></div>
-  <div id="sec-novo" class="section">
-    <div class="card">
-      <div class="card-title">Cadastrar novo lead</div>
-      <div id="fmsg"></div>
-      <div class="row2">
-        <div class="ac-wrap">
-          <label>Nome</label>
-          <input id="fn" placeholder="Ex: Dona Maria" autocomplete="off" oninput="acBuscar('nome',this.value)" onblur="acFechar(300)">
-          <div class="ac-lista" id="ac-nome"></div>
-        </div>
-        <div class="ac-wrap">
-          <label>Telefone</label>
-          <input id="ft" placeholder="11999999999" autocomplete="off" oninput="acBuscar('tel',this.value)" onblur="acFechar(300)">
-          <div class="ac-lista" id="ac-tel"></div>
+
+  <!-- MAIN -->
+  <div class="main expanded" id="main">
+    <div class="main-header" id="main-header">
+      <div style="width:36px"></div>
+      <div>
+        <div class="main-header-title" id="header-title">Painel</div>
+        <div class="main-header-sub" id="header-sub">Visão geral financeira</div>
+      </div>
+    </div>
+    <div class="main-body">
+
+      <!-- PAINEL -->
+      <div id="sec-painel" class="section active"><div class="loading">Carregando...</div></div>
+
+      <!-- NOVO LEAD -->
+      <div id="sec-novo" class="section">
+        <div class="card">
+          <div class="card-title">Cadastrar novo lead</div>
+          <div id="fmsg"></div>
+          <div class="row2">
+            <div class="ac-wrap">
+              <label>Nome</label>
+              <input id="fn" placeholder="Ex: Dona Maria" autocomplete="off" oninput="acBuscar('nome',this.value)" onblur="acFechar(300)">
+              <div class="ac-lista" id="ac-nome"></div>
+            </div>
+            <div class="ac-wrap">
+              <label>Telefone</label>
+              <input id="ft" placeholder="11999999999" autocomplete="off" oninput="acBuscar('tel',this.value)" onblur="acFechar(300)">
+              <div class="ac-lista" id="ac-tel"></div>
+            </div>
+          </div>
+          <div class="ac-wrap">
+            <label>Chave PIX</label>
+            <input id="fp" placeholder="CPF, telefone ou email" autocomplete="off" oninput="acBuscar('pix',this.value)" onblur="acFechar(300)">
+            <div class="ac-lista" id="ac-pix"></div>
+          </div>
+          <div class="row2">
+            <div>
+              <label>Casa de apostas</label>
+              <select id="fc" onchange="trocarCasa(this.value)">
+                <option value="">Selecionar...</option>
+                <option value="EstrelaBet">EstrelaBet</option>
+                <option value="BetAki">BetAki</option>
+                <option value="SuperBet">SuperBet</option>
+                <option value="Betano">Betano</option>
+                <option value="JonBet">JonBet</option>
+                <option value="Blaze">Blaze</option>
+              </select>
+            </div>
+            <div><label>CPA esperado (R$)</label><input id="fcpa" type="number" placeholder="130"></div>
+          </div>
+          <label>Meta total de depósito (R$)</label>
+          <input id="fmeta" type="number" placeholder="50">
+          <label>Data do primeiro depósito</label>
+          <input id="fini" type="date">
+
+          <!-- UPLOAD PRINT -->
+          <div class="sep"></div>
+          <div class="card-title" style="font-size:12px;margin-bottom:8px">📸 Print do perfil na casa de apostas</div>
+          <div class="hint" style="margin-bottom:10px">Envie um print mostrando que a conta foi criada hoje. A IA vai verificar automaticamente.</div>
+          <div class="upload-area" id="upload-area" onclick="document.getElementById('print-input').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+            <input type="file" id="print-input" accept="image/*" multiple onchange="processarPrints(this.files)">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text"><strong>Clique ou arraste o print aqui</strong>Aceita JPG, PNG, WEBP</div>
+          </div>
+          <div class="print-preview" id="print-preview"></div>
+          <div id="ia-result" style="display:none"></div>
+
+          <div class="sep"></div>
+          <div class="hint">Valores e intervalos gerados automaticamente de forma aleatória. Nenhum valor se repete.</div>
+          <button class="btn btn-ac" onclick="salvarLead()">Gerar depósitos e salvar</button>
         </div>
       </div>
-      <div class="ac-wrap">
-        <label>Chave PIX</label>
-        <input id="fp" placeholder="CPF, telefone ou email" autocomplete="off" oninput="acBuscar('pix',this.value)" onblur="acFechar(300)">
-        <div class="ac-lista" id="ac-pix"></div>
-      </div>
-      <div class="row2">
-        <div>
-          <label>Casa de apostas</label>
-          <select id="fc" onchange="trocarCasa(this.value)">
-            <option value="">Selecionar...</option>
-            <option value="EstrelaBet">EstrelaBet</option>
-            <option value="BetAki">BetAki</option>
-            <option value="SuperBet">SuperBet</option>
-            <option value="Betano">Betano</option>
-            <option value="JonBet">JonBet</option>
-            <option value="Blaze">Blaze</option>
-          </select>
+
+      <!-- HOJE -->
+      <div id="sec-hoje" class="section"><div class="loading">Carregando...</div></div>
+
+      <!-- LEADS -->
+      <div id="sec-leads" class="section"><div class="loading">Carregando...</div></div>
+
+      <!-- DETALHE LEAD -->
+      <div id="sec-detalhe" class="section"></div>
+
+      <!-- PLANILHA -->
+      <div id="sec-planilha" class="section">
+        <div class="card">
+          <div class="card-title">Exportar planilha de leads</div>
+          <div class="hint" style="margin-bottom:16px">Exporta todos os leads e seus depósitos em formato CSV, compatível com Excel e Google Sheets.</div>
+          <button class="btn btn-ac" onclick="exportarCSV()">📥 Baixar planilha CSV</button>
         </div>
-        <div><label>CPA esperado (R$)</label><input id="fcpa" type="number" placeholder="130"></div>
+        <div class="card">
+          <div class="card-title">Todos os leads cadastrados</div>
+          <div id="tabela-leads"><div class="loading">Carregando...</div></div>
+        </div>
       </div>
-      <label>Meta total de depósito (R$)</label>
-      <input id="fmeta" type="number" placeholder="50">
-      <label>Data do primeiro depósito</label>
-      <input id="fini" type="date">
-      <div class="sep"></div>
-      <div class="hint">Valores e intervalos gerados automaticamente de forma aleatória. Nenhum valor se repete.</div>
-      <button class="btn btn-ac" onclick="salvarLead()">Gerar depósitos e salvar</button>
+
     </div>
   </div>
-  <div id="sec-hoje" class="section"><div class="loading">Carregando...</div></div>
-  <div id="sec-leads" class="section"><div class="loading">Carregando...</div></div>
-  <div id="sec-detalhe" class="section"></div>
 </div>
 
 <script>
 const SBURL='https://bnsucalnkiciczbtnpyu.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJuc3VjYWxua2ljaWN6YnRucHl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTU2NDUsImV4cCI6MjA5MDczMTY0NX0.q8jH7PyNPGBLiPKsDiYzwxqu2UryojJ6f9ol--rH2yg';
+const CLAUDE_KEY='';
 const H={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
 
 const CASAS={
@@ -280,6 +418,15 @@ const CASAS={
   JonBet:{ac:'#31f545',ac2:'#22c433'},
   Blaze:{ac:'#f53d3d',ac2:'#c42e2e'},
   default:{ac:'#D2AC47',ac2:'#b8942e'}
+};
+
+const HEADERS={
+  painel:{title:'Painel',sub:'Visão geral financeira'},
+  novo:{title:'Novo lead',sub:'Cadastrar e gerar depósitos'},
+  hoje:{title:'Depósitos hoje',sub:'Pagamentos pendentes'},
+  leads:{title:'Leads',sub:'Todos os cadastros'},
+  planilha:{title:'Planilha',sub:'Exportar dados'},
+  detalhe:{title:'Detalhe do lead',sub:'Depósitos e informações'}
 };
 
 const toDay=()=>new Date().toISOString().split('T')[0];
@@ -293,9 +440,60 @@ async function post(tb,data){const r=await fetch(`${SBURL}/rest/v1/${tb}`,{metho
 async function patch(tb,id,data){const r=await fetch(`${SBURL}/rest/v1/${tb}?id=eq.${id}`,{method:'PATCH',headers:H,body:JSON.stringify(data)});if(!r.ok)throw new Error(await r.text());return r.json()}
 async function del(tb,id){const r=await fetch(`${SBURL}/rest/v1/${tb}?id=eq.${id}`,{method:'DELETE',headers:H});if(!r.ok)throw new Error(await r.text())}
 
+// SIDEBAR
+let sidebarAberta=window.innerWidth>640;
+function toggleSidebar(){sidebarAberta?fecharSidebar():abrirSidebar();}
+function abrirSidebar(){
+  sidebarAberta=true;
+  document.getElementById('sidebar').classList.remove('closed');
+  document.getElementById('sb-toggle').classList.add('open');
+  document.getElementById('sb-toggle').textContent='✕';
+  if(window.innerWidth<=640){
+    document.getElementById('sb-overlay').classList.add('active');
+    document.getElementById('main').style.marginLeft='0';
+  }else{
+    document.getElementById('main').style.marginLeft='var(--sidebar)';
+  }
+}
+function fecharSidebar(){
+  sidebarAberta=false;
+  document.getElementById('sidebar').classList.add('closed');
+  document.getElementById('sb-toggle').classList.remove('open');
+  document.getElementById('sb-toggle').textContent='☰';
+  document.getElementById('sb-overlay').classList.remove('active');
+  document.getElementById('main').style.marginLeft='0';
+}
+// Inicia sidebar
+if(window.innerWidth>640){
+  document.getElementById('sidebar').classList.remove('closed');
+  document.getElementById('sb-toggle').classList.add('open');
+  document.getElementById('sb-toggle').textContent='✕';
+  document.getElementById('main').style.marginLeft='var(--sidebar)';
+}else{
+  document.getElementById('sidebar').classList.add('closed');
+}
+
+// NAVEGAÇÃO
+function goTab(t){
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  const nav=document.getElementById('nav-'+t);
+  if(nav)nav.classList.add('active');
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.getElementById('sec-'+t).classList.add('active');
+  const h=HEADERS[t]||HEADERS.painel;
+  document.getElementById('header-title').textContent=h.title;
+  document.getElementById('header-sub').textContent=h.sub;
+  if(window.innerWidth<=640)fecharSidebar();
+  if(t==='painel')renderPainel();
+  if(t==='hoje')renderHoje();
+  if(t==='leads')renderLeads();
+  if(t==='novo')carregarCacheLeads();
+  if(t==='planilha')renderPlanilha();
+}
+
+// AUTOCOMPLETE
 let leadsCache=[];
 async function carregarCacheLeads(){try{leadsCache=await get('leads','');}catch(e){}}
-
 function acBuscar(campo,valor){
   if(valor.length<1){acFechar(0);return;}
   const v=valor.toLowerCase();
@@ -320,12 +518,86 @@ function acSelecionar(id){
 }
 function acFechar(d){setTimeout(()=>{document.querySelectorAll('.ac-lista').forEach(el=>el.style.display='none');},d);}
 
+// CORES POR CASA
 function trocarCasa(nome){
   const t=CASAS[nome]||CASAS.default;
   document.documentElement.style.setProperty('--ac',t.ac);
   document.documentElement.style.setProperty('--ac2',t.ac2);
 }
 
+// UPLOAD E IA
+function dragOver(e){e.preventDefault();document.getElementById('upload-area').classList.add('drag');}
+function dragLeave(e){document.getElementById('upload-area').classList.remove('drag');}
+function dropFile(e){e.preventDefault();dragLeave(e);processarPrints(e.dataTransfer.files);}
+
+let printsBase64=[];
+
+async function processarPrints(files){
+  const preview=document.getElementById('print-preview');
+  const iaDiv=document.getElementById('ia-result');
+  preview.innerHTML='';
+  printsBase64=[];
+  iaDiv.style.display='block';
+  iaDiv.className='ia-result ia-checking';
+  iaDiv.textContent='🔍 Analisando prints com IA...';
+
+  const promises=Array.from(files).map(file=>new Promise(res=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      printsBase64.push({data:e.target.result.split(',')[1],type:file.type});
+      const div=document.createElement('div');
+      div.className='print-item';
+      div.innerHTML=`<img src="${e.target.result}"><div class="print-status status-checking">Verificando...</div>`;
+      preview.appendChild(div);
+      res(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }));
+  await Promise.all(promises);
+  await verificarPrintsIA();
+}
+
+async function verificarPrintsIA(){
+  const iaDiv=document.getElementById('ia-result');
+  const items=document.querySelectorAll('.print-item');
+  try{
+    const hoje=new Date().toLocaleDateString('pt-BR');
+    const msgs=[{
+      role:'user',
+      content:[
+        ...printsBase64.map(p=>({type:'image',source:{type:'base64',media_type:p.type,data:p.data}})),
+        {type:'text',text:`Analise este print de tela de uma casa de apostas. Responda APENAS em JSON com este formato: {"conta_criada_hoje":true|false,"data_encontrada":"DD/MM/AAAA ou não encontrada","confianca":"alta|media|baixa","observacao":"texto curto"}. Hoje é ${hoje}. Verifique se a conta foi criada hoje verificando datas visíveis no print.`}
+      ]
+    }];
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-opus-4-5',max_tokens:300,messages:msgs})
+    });
+    const data=await r.json();
+    const txt=data.content?.[0]?.text||'{}';
+    let resultado;
+    try{resultado=JSON.parse(txt.replace(/```json|```/g,'').trim());}
+    catch{resultado={conta_criada_hoje:false,observacao:'Não foi possível analisar'};}
+
+    items.forEach(item=>{
+      const status=item.querySelector('.print-status');
+      status.className='print-status '+(resultado.conta_criada_hoje?'status-ok':'status-fail');
+      status.textContent=resultado.conta_criada_hoje?'✓ Hoje':'✗ Não hoje';
+    });
+
+    iaDiv.className='ia-result '+(resultado.conta_criada_hoje?'ia-ok':'ia-fail');
+    iaDiv.innerHTML=resultado.conta_criada_hoje
+      ?`✅ Conta criada hoje confirmada! Data: ${resultado.data_encontrada} · Confiança: ${resultado.confianca}<br><small>${resultado.observacao}</small>`
+      :`⚠️ Conta pode não ter sido criada hoje. Data encontrada: ${resultado.data_encontrada||'nenhuma'}<br><small>${resultado.observacao}</small>`;
+  }catch(e){
+    iaDiv.className='ia-result ia-fail';
+    iaDiv.textContent='Erro ao analisar com IA. Verifique o print manualmente.';
+    items.forEach(item=>{item.querySelector('.print-status').className='print-status status-fail';item.querySelector('.print-status').textContent='Erro';});
+  }
+}
+
+// GERAR DEPÓSITOS
 function gerarDeps(meta,inicio){
   const num=meta<=30?2:meta<=60?3:4;
   let vals=[],tries=0;
@@ -350,6 +622,34 @@ function gerarDeps(meta,inicio){
   return vals.map((v,i)=>({valor:v,data_deposito:datas[i],feito:false}));
 }
 
+// SALVAR LEAD
+async function salvarLead(){
+  const nome=document.getElementById('fn').value.trim();
+  const tel=document.getElementById('ft').value.trim();
+  const pix=document.getElementById('fp').value.trim();
+  const casa=document.getElementById('fc').value;
+  const cpa=parseFloat(document.getElementById('fcpa').value)||0;
+  const meta=parseFloat(document.getElementById('fmeta').value)||0;
+  const ini=document.getElementById('fini').value;
+  const msg=document.getElementById('fmsg');
+  if(!nome||!tel||!pix||!casa||!cpa||!meta||!ini){msg.innerHTML='<div class="err">Preencha todos os campos!</div>';return;}
+  msg.innerHTML='<div class="loading">Salvando...</div>';
+  try{
+    const ls=await post('leads',[{nome,telefone:tel,pix,casa,cpa,meta,cpa_validado:false}]);
+    await post('depositos',gerarDeps(meta,ini).map(d=>({...d,lead_id:ls[0].id})));
+    msg.innerHTML='<div class="succ">✓ Lead salvo! Depósitos gerados automaticamente.</div>';
+    ['fn','ft','fp','fcpa','fmeta'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fc').value='';
+    document.getElementById('fini').value=toDay();
+    document.getElementById('print-preview').innerHTML='';
+    document.getElementById('ia-result').style.display='none';
+    printsBase64=[];
+    trocarCasa('default');
+    setTimeout(()=>{msg.innerHTML='';goTab('leads');},1800);
+  }catch(e){msg.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
+}
+
+// LOGIN
 function fazerLogin(){
   const user=document.getElementById('l-user').value.trim();
   const pass=document.getElementById('l-pass').value;
@@ -357,6 +657,7 @@ function fazerLogin(){
   if(user==='admin'&&pass==='Ricosempre@123'){
     sessionStorage.setItem('cpa_auth','1');
     document.getElementById('login-overlay').style.display='none';
+    document.getElementById('layout').style.display='flex';
     init();
   }else{
     err.style.display='block';
@@ -364,11 +665,11 @@ function fazerLogin(){
   }
 }
 
+// NOTIFICAÇÕES
 function atualizarBadge(n){
-  const tab=document.getElementById('tab-hoje');
-  let b=tab.querySelector('.tab-badge');
-  if(n>0){if(!b){b=document.createElement('span');b.className='tab-badge';tab.appendChild(b);}b.textContent=n;}
-  else if(b)b.remove();
+  const b=document.getElementById('sb-badge');
+  if(n>0){b.textContent=n;b.style.display='inline';}
+  else{b.style.display='none';}
 }
 
 async function verificarNotificacoes(){
@@ -393,6 +694,7 @@ async function verificarNotificacoes(){
 function fecharNotif(){document.getElementById('notif-overlay').style.display='none';}
 function fecharNotifIrHoje(){fecharNotif();goTab('hoje');}
 
+// INIT
 async function init(){
   try{
     await get('leads','limit=1');
@@ -409,6 +711,7 @@ async function init(){
   }
 }
 
+// PAINEL
 async function renderPainel(){
   const el=document.getElementById('sec-painel');
   try{
@@ -434,7 +737,7 @@ async function renderPainel(){
       </div>`;
       atualizarBadge(depsHoje.length);
     }else{atualizarBadge(0);}
-    el.innerHTML=`<div style="padding-top:12px">
+    el.innerHTML=`
       ${avisoHoje}
       <div class="lucro-box">
         <div class="lucro-label">Lucro líquido acumulado</div>
@@ -452,34 +755,11 @@ async function renderPainel(){
         <div class="info-row"><span style="color:var(--muted)">CPA projetado (80% taxa)</span><span style="color:#D2AC47">${fmtR(projCPA)}</span></div>
         <div class="info-row"><span style="color:var(--muted)">Ainda a depositar</span><span style="color:var(--alerta)">${fmtR(aDepositar)}</span></div>
         <div class="info-row"><span style="color:var(--muted)">Lucro projetado total</span><span style="color:#D2AC47;font-weight:600">${fmtR(lucro+projCPA-aDepositar)}</span></div>
-      </div>
-    </div>`;
+      </div>`;
   }catch(e){el.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
 }
 
-async function salvarLead(){
-  const nome=document.getElementById('fn').value.trim();
-  const tel=document.getElementById('ft').value.trim();
-  const pix=document.getElementById('fp').value.trim();
-  const casa=document.getElementById('fc').value;
-  const cpa=parseFloat(document.getElementById('fcpa').value)||0;
-  const meta=parseFloat(document.getElementById('fmeta').value)||0;
-  const ini=document.getElementById('fini').value;
-  const msg=document.getElementById('fmsg');
-  if(!nome||!tel||!pix||!casa||!cpa||!meta||!ini){msg.innerHTML='<div class="err">Preencha todos os campos!</div>';return;}
-  msg.innerHTML='<div class="loading">Salvando...</div>';
-  try{
-    const ls=await post('leads',[{nome,telefone:tel,pix,casa,cpa,meta,cpa_validado:false}]);
-    await post('depositos',gerarDeps(meta,ini).map(d=>({...d,lead_id:ls[0].id})));
-    msg.innerHTML='<div class="succ">✓ Lead salvo! Depósitos gerados automaticamente.</div>';
-    ['fn','ft','fp','fcpa','fmeta'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('fc').value='';
-    document.getElementById('fini').value=toDay();
-    trocarCasa('default');
-    setTimeout(()=>{msg.innerHTML='';goTab('leads');},1800);
-  }catch(e){msg.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
-}
-
+// HOJE
 async function renderHoje(){
   const el=document.getElementById('sec-hoje');
   el.innerHTML='<div class="loading">Carregando...</div>';
@@ -523,12 +803,13 @@ async function marcarFeito(depId,leadId){
   }catch(e){alert('Erro: '+e.message);}
 }
 
+// LEADS
 async function renderLeads(){
   const el=document.getElementById('sec-leads');
   el.innerHTML='<div class="loading">Carregando...</div>';
   try{
     const[leads,deps]=await Promise.all([get('leads'),get('depositos')]);
-    if(!leads.length){el.innerHTML='<div class="empty">Nenhum lead ainda.<br><span style="font-size:11px">Use "+ Lead" para cadastrar</span></div>';return;}
+    if(!leads.length){el.innerHTML='<div class="empty">Nenhum lead ainda.<br><span style="font-size:11px">Use "Novo lead" na sidebar</span></div>';return;}
     const dm={};deps.forEach(d=>{if(!dm[d.lead_id])dm[d.lead_id]=[];dm[d.lead_id].push(d);});
     el.innerHTML=leads.map(l=>{
       const lds=dm[l.id]||[];
@@ -554,8 +835,12 @@ async function renderLeads(){
   }catch(e){el.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
 }
 
+// VER LEAD
 async function verLead(id){
-  goTabRaw('detalhe');
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.getElementById('sec-detalhe').classList.add('active');
+  document.getElementById('header-title').textContent='Detalhe do lead';
+  document.getElementById('header-sub').textContent='Depósitos e informações';
   const el=document.getElementById('sec-detalhe');
   el.innerHTML='<div class="loading">Carregando...</div>';
   try{
@@ -566,9 +851,9 @@ async function verLead(id){
     const pct=l.meta>0?Math.min(100,Math.round(feito/parseFloat(l.meta)*100)):0;
     el.innerHTML=`
       <button class="back-btn" onclick="goTab('leads')">← Voltar</button>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
         <span style="width:10px;height:10px;border-radius:50%;background:${t.ac};display:inline-block"></span>
-        <div class="detalhe-title" style="margin:0">${l.nome}</div>
+        <div style="font-size:18px;font-weight:700">${l.nome}</div>
       </div>
       <div class="card">
         <div class="info-row"><span style="color:var(--muted)">Telefone</span><span>${l.telefone}</span></div>
@@ -582,8 +867,11 @@ async function verLead(id){
         <div class="card-title">Depósitos</div>
         <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px"><span>${fmtR(feito)} de ${fmtR(l.meta)}</span><span>${pct}%</span></div>
         <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" style="width:${pct}%;background:${t.ac}"></div></div>
-        ${deps.map(d=>`<div class="dep-item">
-          <div><div class="dep-data">${fmtD(d.data_deposito)}</div><div class="dep-valor" style="color:${d.feito?'var(--muted)':'var(--texto)'}">${fmtR(d.valor)}</div></div>
+        ${deps.map((d,i)=>`<div class="dep-item">
+          <div>
+            <div class="dep-data">${fmtD(d.data_deposito)} ${i===0?'<span class="badge" style="background:#1a1000;color:#D2AC47;margin-left:6px">1º dep.</span>':''}</div>
+            <div class="dep-valor" style="color:${d.feito?'var(--muted)':'var(--texto)'}">${fmtR(d.valor)}</div>
+          </div>
           <button class="btn-sm ${d.feito?'btn-desfazer':'btn-ok'}" onclick="toggleDep('${d.id}','${l.id}','${id}',${d.feito})">${d.feito?'Desfazer':'✓ Feito'}</button>
         </div>`).join('')}
       </div>
@@ -607,17 +895,57 @@ async function deletarLead(id){
   catch(e){alert('Erro: '+e.message);}
 }
 
-function goTab(t){
-  document.querySelectorAll('.tab').forEach((el,i)=>{el.classList.toggle('active',['painel','novo','hoje','leads'][i]===t);});
-  goTabRaw(t);
-  if(t==='painel')renderPainel();
-  if(t==='hoje')renderHoje();
-  if(t==='leads')renderLeads();
-  if(t==='novo')carregarCacheLeads();
+// PLANILHA
+async function renderPlanilha(){
+  const el=document.getElementById('tabela-leads');
+  try{
+    const[leads,deps]=await Promise.all([get('leads'),get('depositos')]);
+    if(!leads.length){el.innerHTML='<div class="empty">Nenhum lead cadastrado ainda.</div>';return;}
+    const dm={};deps.forEach(d=>{if(!dm[d.lead_id])dm[d.lead_id]=[];dm[d.lead_id].push(d);});
+    el.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="border-bottom:1px solid #3a2e00">
+        <th style="text-align:left;padding:8px;color:var(--muted)">Nome</th>
+        <th style="text-align:left;padding:8px;color:var(--muted)">Casa</th>
+        <th style="text-align:left;padding:8px;color:var(--muted)">PIX</th>
+        <th style="text-align:right;padding:8px;color:var(--muted)">Meta</th>
+        <th style="text-align:right;padding:8px;color:var(--muted)">CPA</th>
+        <th style="text-align:center;padding:8px;color:var(--muted)">Status</th>
+      </tr></thead>
+      <tbody>${leads.map(l=>{
+        const lds=dm[l.id]||[];
+        const feito=lds.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+        return`<tr style="border-bottom:1px solid #1a1000">
+          <td style="padding:8px;font-weight:500">${l.nome}</td>
+          <td style="padding:8px;color:var(--muted)">${l.casa}</td>
+          <td style="padding:8px;font-family:'DM Mono',monospace;font-size:11px;color:var(--azul)">${l.pix}</td>
+          <td style="padding:8px;text-align:right">${fmtR(l.meta)}</td>
+          <td style="padding:8px;text-align:right;color:#D2AC47">${fmtR(l.cpa)}</td>
+          <td style="padding:8px;text-align:center"><span class="badge ${l.cpa_validado?'badge-ok':'badge-pend'}">${l.cpa_validado?'Validado':'Em andamento'}</span></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`;
+  }catch(e){el.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
 }
-function goTabRaw(t){
-  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
-  document.getElementById('sec-'+t).classList.add('active');
+
+async function exportarCSV(){
+  try{
+    const[leads,deps]=await Promise.all([get('leads'),get('depositos')]);
+    const dm={};deps.forEach(d=>{if(!dm[d.lead_id])dm[d.lead_id]=[];dm[d.lead_id].push(d);});
+    let csv='Nome,Telefone,PIX,Casa,Meta (R$),CPA Esperado (R$),Depositado (R$),Status,Deposito 1,Deposito 2,Deposito 3,Deposito 4\n';
+    leads.forEach(l=>{
+      const lds=(dm[l.id]||[]).sort((a,b)=>a.data_deposito.localeCompare(b.data_deposito));
+      const feito=lds.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
+      const deps4=lds.slice(0,4).map(d=>`${fmtD(d.data_deposito)} R$${d.valor} ${d.feito?'(feito)':'(pendente)'}`);
+      while(deps4.length<4)deps4.push('');
+      csv+=`"${l.nome}","${l.telefone}","${l.pix}","${l.casa}",${l.meta},${l.cpa},${feito.toFixed(2)},"${l.cpa_validado?'CPA Validado':'Em andamento'}","${deps4[0]}","${deps4[1]}","${deps4[2]}","${deps4[3]}"\n`;
+    });
+    const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=`cpaboss-leads-${toDay()}.csv`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){alert('Erro ao exportar: '+e.message);}
 }
 
 // SPLASH → LOGIN → APP
@@ -628,6 +956,7 @@ setTimeout(()=>{
   setTimeout(()=>{
     s.remove();
     if(sessionStorage.getItem('cpa_auth')==='1'){
+      document.getElementById('layout').style.display='flex';
       init();
     }else{
       document.getElementById('login-overlay').style.display='flex';
