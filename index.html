@@ -1079,7 +1079,8 @@ async function salvarLeadAfil(){
   const cpa=parseFloat(document.getElementById('alcpa')?.value)||0;
   const meta=parseFloat(document.getElementById('almeta')?.value)||0;
   const ini=document.getElementById('alini')?.value;
-  const afilId=document.getElementById('ala')?.value||null;
+  const alaEl=document.getElementById('ala');
+  const afilId=alaEl?alaEl.value||(afiliadoLogado?.id||null):afiliadoLogado?.id||null;
   const msg=document.getElementById('afil-lead-msg');
   if(!nome||!tel||!pix||!casa||!cpa||!meta||!ini){msg.innerHTML='<div class="err">Preencha todos os campos!</div>';return;}
   if(!printOK2){msg.innerHTML='<div class="err">O print não foi validado pela IA.</div>';return;}
@@ -1216,30 +1217,92 @@ async function renderAfilLeads(){
   if(!afiliadoLogado){mb.innerHTML='<div class="err">Sessão inválida.</div>';return;}
   try{
     const la=await dbGet('leads_afiliados',`afiliado_id=eq.${afiliadoLogado.id}`);
-    if(!la.length){mb.innerHTML='<div class="empty">Você ainda não tem leads indicados.</div>';return;}
-    const ids=la.map(x=>x.lead_id);
-    const leads=await dbGet('leads',`id=in.(${ids.join(',')})`);
+    const leads_ids=la.map(x=>x.lead_id);
+    const leads=leads_ids.length?await dbGet('leads',`id=in.(${leads_ids.join(',')})`):[];
     const lm=Object.fromEntries(leads.map(l=>[l.id,l]));
-    mb.innerHTML=la.map(x=>{
-      const l=lm[x.lead_id]||{};const t=cac(l.casa);
-      return`<div class="lead-card" style="border-left:3px solid ${t}">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <div class="lead-name">${l.nome||'?'}</div>
-            <div class="lead-meta" style="display:flex;align-items:center;gap:6px;margin-top:4px">
-              <span style="width:6px;height:6px;border-radius:50%;background:${t};display:inline-block"></span>
-              ${l.casa||'?'}
+
+    mb.innerHTML=`
+      <div style="display:flex;gap:10px;margin-bottom:4px;flex-wrap:wrap">
+        <button class="btn-sm btn-ok" style="flex:1" onclick="mostrarAbaAfilLead('lista')">👥 Meus leads</button>
+        <button class="btn-sm btn-desfazer" style="flex:1" onclick="mostrarAbaAfilLead('novo')">➕ Cadastrar novo lead</button>
+      </div>
+
+      <div id="aba-afil-lista">
+        ${la.length===0?'<div class="empty" style="margin-top:16px">Você ainda não tem leads indicados.</div>':la.map(x=>{
+          const l=lm[x.lead_id]||{};const t=cac(l.casa);
+          return`<div class="lead-card" style="border-left:3px solid ${t};margin-top:10px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="lead-name">${l.nome||'?'}</div>
+                <div class="lead-meta" style="display:flex;align-items:center;gap:6px;margin-top:4px">
+                  <span style="width:6px;height:6px;border-radius:50%;background:${t};display:inline-block"></span>
+                  ${l.casa||'?'}
+                </div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:14px;font-weight:700;color:var(--azul)">${fmtR(x.valor_pago)}</div>
+                <span class="badge ${x.pago?'b-ok':'b-pend'}">${x.pago?'Pago':'A pagar'}</span>
+              </div>
             </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">CPA: ${l.cpa_validado?'<span style="color:#D2AC47">Validado</span>':'Em andamento'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div id="aba-afil-novo" style="display:none">
+        <div class="card" style="margin-top:12px">
+          <div class="card-title">👤 Dados do lead</div>
+          <div id="afil-novo-msg"></div>
+          <div class="row2">
+            <div class="ac-wrap"><label>Nome</label><input id="aln" placeholder="Ex: Dona Maria" autocomplete="off" oninput="acBuscar('nome',this.value)" onblur="acFechar(300)"><div class="ac-lista" id="ac-nome"></div></div>
+            <div class="ac-wrap"><label>Telefone</label><input id="alt" placeholder="11999999999" autocomplete="off" oninput="acBuscar('tel',this.value)" onblur="acFechar(300)"><div class="ac-lista" id="ac-tel"></div></div>
           </div>
-          <div style="text-align:right">
-            <div style="font-size:14px;font-weight:700;color:var(--azul)">${fmtR(x.valor_pago)}</div>
-            <span class="badge ${x.pago?'b-ok':'b-pend'}">${x.pago?'Pago':'A pagar'}</span>
+          <div class="ac-wrap"><label>Chave PIX</label><input id="alp" placeholder="CPF, telefone ou email" autocomplete="off" oninput="acBuscar('pix',this.value)" onblur="acFechar(300)"><div class="ac-lista" id="ac-pix"></div></div>
+          <div class="row2">
+            <div>
+              <label>Casa de apostas</label>
+              <select id="alc" onchange="trocarCasaAfilForm(this.value)">
+                <option value="">Selecionar...</option>
+                <option value="EstrelaBet">EstrelaBet — R$50 dep · CPA R$110</option>
+                <option value="SuperBet">SuperBet — R$50 dep · CPA R$10</option>
+                <option value="Betano">Betano — R$10 dep · CPA R$50</option>
+                <option value="JonBet">JonBet — R$50 dep · CPA R$110</option>
+                <option value="Blaze">Blaze — R$50 dep · CPA R$110</option>
+                <option value="Bet7k">Bet7k — R$50 dep · CPA R$120</option>
+                <option value="CassinoPix">CassinoPix — R$50 dep · CPA R$120</option>
+                <option value="VeraBet">VeraBet — R$50 dep · CPA R$120</option>
+              </select>
+            </div>
+            <div><label>Data do primeiro depósito</label><input id="alini" type="date" value="${toDay()}"></div>
+          </div>
+          <div class="row2">
+            <div><label>CPA esperado (R$)</label><input id="alcpa" type="number" placeholder="Selecione a casa" readonly style="opacity:.6"></div>
+            <div><label>Meta depósito (R$)</label><input id="almeta" type="number" placeholder="Selecione a casa" readonly style="opacity:.6"></div>
           </div>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">CPA: ${l.cpa_validado?'<span style="color:#D2AC47">Validado</span>':'Em andamento'}</div>
+        <div class="card">
+          <div class="card-title">📸 Verificação obrigatória — Print do perfil</div>
+          <div class="hint" style="margin-bottom:12px">Envie o print mostrando a data de criação da conta. <strong style="color:#FF5C5C">O cadastro só é liberado se a conta foi criada hoje.</strong></div>
+          <div class="upload-area" id="ua2" onclick="document.getElementById('pi2').click()" ondragover="dragOver2(event)" ondragleave="dragLeave2()" ondrop="dropFile2(event)">
+            <input type="file" id="pi2" accept="image/*" multiple onchange="processarPrints2(this.files)">
+            <div style="font-size:32px;margin-bottom:8px">📷</div>
+            <div class="hint"><strong style="color:var(--texto);display:block;margin-bottom:4px">Clique ou arraste o print aqui</strong>Aceita JPG, PNG, WEBP</div>
+          </div>
+          <div class="print-preview" id="pp2"></div>
+          <div class="ia-result ia-check" id="ia-res2" style="display:none"></div>
+          <div class="ia-block" id="ia-block2"></div>
+          <div class="hint" style="margin-top:10px">Valores e intervalos de depósito gerados automaticamente. Nenhum valor se repete.</div>
+          <button class="btn btn-ac" id="btn-salvar-afil" onclick="salvarLeadAfil()" disabled style="opacity:.45">Gerar depósitos e salvar</button>
+        </div>
       </div>`;
-    }).join('');
+
+    carregarCache();
   }catch(e){mb.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
+}
+
+function mostrarAbaAfilLead(aba){
+  document.getElementById('aba-afil-lista').style.display=aba==='lista'?'block':'none';
+  document.getElementById('aba-afil-novo').style.display=aba==='novo'?'block':'none';
 }
 
 
