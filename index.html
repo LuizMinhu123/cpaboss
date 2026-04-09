@@ -292,6 +292,80 @@ select option{background:var(--s2)}
 .afil-box-label{font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:5px}
 .afil-box-value{font-size:26px;font-weight:800;color:var(--blue);letter-spacing:-1px}
 
+
+/* ── AVATAR LEADS ── */
+.lead-avatar{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;letter-spacing:-.5px}
+
+/* ── COUNTDOWN BADGE ── */
+.countdown{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px}
+.cd-ok{background:rgba(16,185,129,.1);color:var(--em);border:1px solid rgba(16,185,129,.2)}
+.cd-warn{background:rgba(249,115,22,.1);color:var(--orange);border:1px solid rgba(249,115,22,.2)}
+.cd-late{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+
+/* ── BARRA PROGRESSO GLOBAL ── */
+.progress-global{position:sticky;top:var(--top);z-index:49;height:2px;background:var(--b1);width:100%}
+.progress-global-fill{height:100%;background:linear-gradient(90deg,var(--em),#34D399);transition:width 1s cubic-bezier(.4,0,.2,1)}
+
+/* ── SIDEBAR ICON MODE ── */
+.sidebar.icon-only{width:56px!important}
+.sidebar.icon-only .sb-name,.sidebar.icon-only .sb-role,
+.sidebar.icon-only .ni-label,.sidebar.icon-only .ni-badge,
+.sidebar.icon-only .sb-group-label,.sidebar.icon-only #stxt,.sidebar.icon-only .logout{display:none}
+.sidebar.icon-only .ni{justify-content:center;padding:10px 0}
+.sidebar.icon-only .ni-icon{width:36px;font-size:18px;opacity:1}
+.sidebar.icon-only .sb-head{padding:16px 0;justify-content:center}
+.sidebar.icon-only .sb-mark{margin:0 auto}
+.sidebar.icon-only .sb-foot{justify-content:center}
+.sidebar.icon-only .sdot{margin:0 auto}
+
+/* ── STAGGER ANIMATION ── */
+@keyframes staggerIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.stagger>*{animation:staggerIn .3s ease both}
+.stagger>*:nth-child(1){animation-delay:.03s}
+.stagger>*:nth-child(2){animation-delay:.06s}
+.stagger>*:nth-child(3){animation-delay:.09s}
+.stagger>*:nth-child(4){animation-delay:.12s}
+.stagger>*:nth-child(5){animation-delay:.15s}
+.stagger>*:nth-child(6){animation-delay:.18s}
+.stagger>*:nth-child(7){animation-delay:.21s}
+.stagger>*:nth-child(8){animation-delay:.24s}
+.stagger>*:nth-child(n+9){animation-delay:.27s}
+
+/* ── HEAT MAP ── */
+.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
+.hm-cell{border-radius:4px;height:32px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:rgba(255,255,255,.5);transition:all .2s;cursor:default}
+.hm-cell:hover{transform:scale(1.05);color:#fff}
+.hm-day{font-size:9px;color:var(--t3);text-align:center;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+
+/* ── STATS TAB ── */
+.stat-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--b1)}
+.stat-row:last-child{border-bottom:none}
+.stat-rank{font-size:12px;font-weight:700;color:var(--t3);width:20px}
+.stat-bar{flex:1;height:4px;background:var(--b2);border-radius:99px;overflow:hidden}
+.stat-bar-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.stat-val{font-size:12px;font-weight:700;color:var(--t1);width:70px;text-align:right}
+
+/* ── LUCRO REDESIGN ── */
+.lucro-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;width:100%}
+.lucro-stat{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:16px 20px;position:relative;overflow:hidden}
+.lucro-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.lucro-stat.ls-main::before{background:linear-gradient(90deg,var(--em),#34D399)}
+.lucro-stat.ls-recv::before{background:var(--blue)}
+.lucro-stat.ls-dep::before{background:var(--orange)}
+.ls-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px}
+.ls-val{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1}
+.ls-main .ls-val{color:var(--em)}
+.ls-recv .ls-val{color:var(--blue)}
+.ls-dep .ls-val{color:var(--orange)}
+
+/* ── PULSE DOT ANIMADO ── */
+@keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.5);opacity:0}}
+.sdot-wrap{position:relative;width:10px;height:10px;flex-shrink:0}
+.sdot{position:absolute;inset:2px;border-radius:50%;background:var(--t3)}
+.sdot.online{background:var(--em)}
+.sdot-ring{position:absolute;inset:0;border-radius:50%;background:var(--em);opacity:0;animation:ripple 2s ease infinite;display:none}
+.sdot.online~.sdot-ring{display:block}
+
 /* ═══════════════════════ RESPONSIVE ═══════════════════════ */
 @media(max-width:640px){
   .sidebar{width:82vw}
@@ -385,6 +459,7 @@ select option{background:var(--s2)}
 <div class="layout" id="layout" style="display:none">
   <div class="sb-overlay" id="sb-overlay" onclick="fecharSB()"></div>
   <button class="sb-toggle" id="sb-toggle" onclick="toggleSB()">☰</button>
+  <button class="sb-toggle" style="top:52px" onclick="toggleIconMode()" title="Modo compacto">◀</button>
   <div class="sidebar closed" id="sidebar">
     <div class="sb-head">
       <div class="sb-brand">
@@ -397,7 +472,7 @@ select option{background:var(--s2)}
     </div>
     <nav class="sb-nav" id="sb-nav"></nav>
     <div class="sb-foot">
-      <div class="sb-status"><div class="sdot" id="sdot"></div><span id="stxt">conectando...</span></div>
+      <div class="sb-status"><div class="sdot-wrap"><div class="sdot" id="sdot"></div><div class="sdot-ring" id="sdot-ring"></div></div><span id="stxt">conectando...</span></div>
       <span class="logout" onclick="fazerLogout()">Sair</span>
     </div>
   </div>
@@ -409,6 +484,7 @@ select option{background:var(--s2)}
         <div class="mh-sub" id="mh-sub">Visão geral</div>
       </div>
     </div>
+    <div class="progress-global"><div class="progress-global-fill" id="pg-fill" style="width:0%"></div></div>
     <div class="mb" id="mb"></div>
   </div>
 </div>
@@ -429,6 +505,23 @@ const CASAS={
   default:   {ac:'#10B981',deposito:50,cpa:110}
 };
 const TABS={painel:{t:'Painel ADM',s:'Visão geral e finanças'},novo:{t:'Novo lead',s:'Cadastrar e verificar'},hoje:{t:'Depósitos hoje',s:'Pagamentos pendentes'},leads:{t:'Leads',s:'Todos os cadastros'},afiliados:{t:'Afiliados',s:'Gerenciar parceiros'},planilha:{t:'Planilha',s:'Exportar dados'},detalhe:{t:'Detalhe',s:'Informações do lead'},'afil-painel':{t:'Meu painel',s:'Seus resultados'},'afil-leads':{t:'Meus leads',s:'Leads que você indicou'}};
+
+let iconMode=false;
+function toggleIconMode(){
+  iconMode=!iconMode;
+  const sb=document.getElementById('sidebar');
+  const main=document.getElementById('main');
+  if(iconMode){
+    sb.classList.add('icon-only');
+    main.style.marginLeft=sbOpen?'56px':'0';
+    document.querySelectorAll('.sb-toggle')[1].textContent='▶';
+  }else{
+    sb.classList.remove('icon-only');
+    main.style.marginLeft=sbOpen?'var(--sb)':'0';
+    document.querySelectorAll('.sb-toggle')[1].textContent='◀';
+  }
+}
+
 let tipoLogin='adm',afiliadoLogado=null,printOK=false,printsB64=[],leadsCache=[],charts={};
 const toDay=()=>new Date().toISOString().split('T')[0];
 const fmtD=d=>{if(!d)return'-';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`};
@@ -508,8 +601,7 @@ function iniciarApp(tipo){
       <div class="ni active" onclick="goTab('afil-painel')" id="ni-afil-painel"><span class="ni-icon">📊</span><span class="ni-label">Meu painel</span></div>
       <div class="ni" onclick="goTab('afil-leads')" id="ni-afil-leads"><span class="ni-icon">👥</span><span class="ni-label">Meus leads</span></div>`;
     if(window.innerWidth>640)abrirSB();
-    document.getElementById('sdot').style.background='var(--em)';document.getElementById('sdot').classList.add('online');
-    document.getElementById('sdot').classList.add('online');document.getElementById('stxt').textContent='online';
+    const sdot=document.getElementById('sdot');sdot.classList.add('online');document.getElementById('stxt').textContent='online';
     goTab('afil-painel');
   }
 }
@@ -726,8 +818,7 @@ function fecharNotifIrHoje(){fecharNotif();goTab('hoje');}
 async function init(){
   try{
     await dbGet('leads','limit=1');
-    document.getElementById('sdot').style.background='var(--em)';document.getElementById('sdot').classList.add('online');
-    document.getElementById('sdot').classList.add('online');document.getElementById('stxt').textContent='online';
+    const sdot=document.getElementById('sdot');sdot.classList.add('online');document.getElementById('stxt').textContent='online';
     goTab('painel');
     carregarCache();
     setTimeout(verificarNotif,800);
@@ -751,7 +842,11 @@ async function renderPainel(){
     const dHoje=deps.filter(d=>d.data_deposito===toDay()&&!d.feito);
     const mediaCPA=leads.length>0?leads.reduce((s,l)=>s+parseFloat(l.cpa),0)/leads.length:130;
     const projCPA=ativos*mediaCPA*0.8;
+    const taxaSucesso=leads.length>0?Math.round(valid/leads.length*100):0;
     setBadge(dHoje.length);
+    // update global progress bar
+    const pf=document.getElementById('pg-fill');
+    if(pf)pf.style.width=taxaSucesso+'%';
 
     let aviso='';
     if(dHoje.length>0){
@@ -759,67 +854,113 @@ async function renderPainel(){
       const lh=await dbGet('leads',`id=in.(${ids.join(',')})`);
       const lm=Object.fromEntries(lh.map(l=>[l.id,l]));
       aviso=`<div class="aviso-banner">
-        <div class="aviso-titulo">🔔 ${dHoje.length} depósito${dHoje.length>1?'s':''} para hoje</div>
-        ${dHoje.map(d=>{const l=lm[d.lead_id]||{};return`<div class="aviso-item"><div><div style="font-weight:600">${l.nome||'?'}</div><div style="font-size:11px;color:var(--muted)">${l.casa||''}</div></div><div class="aviso-valor">${fmtR(d.valor)}</div></div>`;}).join('')}
-        <button class="btn btn-ac" style="margin-top:10px" onclick="goTab('hoje')">Fazer depósitos agora →</button>
+        <div class="aviso-titulo">⚡ ${dHoje.length} depósito${dHoje.length>1?'s':''} para hoje</div>
+        ${dHoje.map(d=>{const l=lm[d.lead_id]||{};return`<div class="aviso-item"><div><div style="font-weight:600">${l.nome||'?'}</div><div style="font-size:11px;color:var(--t3)">${l.casa||''}</div></div><div class="aviso-valor">${fmtR(d.valor)}</div></div>`;}).join('')}
+        <button class="btn btn-ac" style="margin-top:10px" onclick="goTab('hoje')">Ir para depósitos →</button>
       </div>`;
     }
 
-    // Dados para gráficos
     const casasNomes=Object.keys(CASAS).filter(k=>k!=='default');
-    const leadsC=casasNomes.map(c=>leads.filter(l=>l.casa===c).length);
-    const lucroC=casasNomes.map(c=>{
-      const ls=leads.filter(l=>l.casa===c&&l.cpa_validado);
+    const leadsC=casasNomes.map(cn=>leads.filter(l=>l.casa===cn).length);
+    const lucroC=casasNomes.map(cn=>{
+      const ls=leads.filter(l=>l.casa===cn&&l.cpa_validado);
       const cpaC=ls.reduce((s,l)=>s+parseFloat(l.cpa),0);
       const gastoC=deps.filter(d=>d.feito&&ls.find(l=>l.id===d.lead_id)).reduce((s,d)=>s+parseFloat(d.valor),0);
       return cpaC-gastoC;
     });
-    // Últimos 7 dias
     const dias7=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return d.toISOString().split('T')[0];});
     const lucrosD=dias7.map(d=>{
-      const dsFeitos=deps.filter(x=>x.data_deposito===d&&x.feito);
+      const dsF=deps.filter(x=>x.data_deposito===d&&x.feito);
       const cpaD=leads.filter(l=>l.cpa_validado&&deps.filter(x=>x.lead_id===l.id&&x.feito&&x.data_deposito===d).length>0).reduce((s,l)=>s+parseFloat(l.cpa),0);
-      return cpaD-dsFeitos.reduce((s,x)=>s+parseFloat(x.valor),0);
+      return cpaD-dsF.reduce((s,x)=>s+parseFloat(x.valor),0);
     });
+    // heatmap — deps por dia da semana
+    const diasSemana=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    const heatCounts=Array(7).fill(0);
+    deps.filter(d=>d.feito).forEach(d=>{const day=new Date(d.data_deposito+'T12:00:00').getDay();heatCounts[day]++;});
+    const hmMax=Math.max(...heatCounts,1);
+    // ranking casas
+    const rankCasas=casasNomes.map((cn,i)=>({nome:cn,lucro:lucroC[i],leads:leadsC[i]}))
+      .filter(x=>x.leads>0).sort((a,b)=>b.lucro-a.lucro);
 
     mb.innerHTML=`
       ${aviso}
-      <div class="lucro-box">
-        <div class="lucro-label">Lucro líquido acumulado</div>
-        <div class="lucro-valor">${fmtR(lucro)}</div>
-        <div class="lucro-sub">CPA recebido: ${fmtR(ganho)} · Depositado: ${fmtR(gasto)}</div>
+      <div class="lucro-row">
+        <div class="lucro-stat ls-main">
+          <div class="ls-label">Lucro líquido</div>
+          <div class="ls-val">${fmtR(lucro)}</div>
+        </div>
+        <div class="lucro-stat ls-recv">
+          <div class="ls-label">CPA recebido</div>
+          <div class="ls-val">${fmtR(ganho)}</div>
+        </div>
+        <div class="lucro-stat ls-dep">
+          <div class="ls-label">Total depositado</div>
+          <div class="ls-val">${fmtR(gasto)}</div>
+        </div>
       </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-label">Leads ativos</div><div class="metric-value mv-al">${ativos}</div></div>
+      <div class="metrics stagger">
+        <div class="metric"><div class="metric-label">Leads ativos</div><div class="metric-value mv-az">${ativos}</div></div>
         <div class="metric"><div class="metric-label">CPA validados</div><div class="metric-value mv-ac">${valid}</div></div>
         <div class="metric"><div class="metric-label">Depósitos hoje</div><div class="metric-value ${dHoje.length>0?'mv-al':'mv-ac'}">${dHoje.length}</div></div>
-        <div class="metric"><div class="metric-label">Taxa sucesso</div><div class="metric-value">${leads.length>0?Math.round(valid/leads.length*100):0}%</div></div>
+        <div class="metric"><div class="metric-label">Taxa de sucesso</div><div class="metric-value mv-ok">${taxaSucesso}%</div></div>
       </div>
       <div class="chart-card-full">
-        <div class="chart-lbl">📈 Lucro por dia (últimos 7 dias)</div>
-        <div style="position:relative;height:220px"><canvas id="ch-linha"></canvas></div>
+        <div class="chart-lbl">Lucro por dia — últimos 7 dias</div>
+        <div style="position:relative;height:200px"><canvas id="ch-linha"></canvas></div>
       </div>
       <div class="chart-grid">
         <div class="chart-card">
-          <div class="chart-lbl">🏠 Leads por casa</div>
-          <div style="position:relative;height:200px"><canvas id="ch-pizza"></canvas></div>
+          <div class="chart-lbl">Distribuição de leads por casa</div>
+          <div style="position:relative;height:190px"><canvas id="ch-pizza"></canvas></div>
         </div>
         <div class="chart-card">
-          <div class="chart-lbl">💰 Lucro por casa</div>
-          <div style="position:relative;height:200px"><canvas id="ch-barra"></canvas></div>
+          <div class="chart-lbl">Lucro por casa</div>
+          <div style="position:relative;height:190px"><canvas id="ch-barra"></canvas></div>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-lbl">Mapa de calor — depósitos por dia da semana</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px">
+            ${diasSemana.map(d=>`<div class="hm-day">${d}</div>`).join('')}
+          </div>
+          <div class="heatmap">
+            ${heatCounts.map((n,i)=>{
+              const int=Math.round((n/hmMax)*100);
+              const bg=n===0?'var(--s2)':`rgba(16,185,129,${.12+.78*(n/hmMax)})`;
+              return`<div class="hm-cell" style="background:${bg}" title="${diasSemana[i]}: ${n} dep.">${n||''}</div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-lbl">Ranking de casas</div>
+          ${rankCasas.length===0?'<div style="color:var(--t3);font-size:13px;padding:20px 0;text-align:center">Sem dados ainda</div>':rankCasas.map((x,i)=>{
+            const pct=rankCasas[0].lucro>0?Math.round((x.lucro/rankCasas[0].lucro)*100):0;
+            const cor=cac(x.nome);
+            return`<div class="stat-row">
+              <div class="stat-rank">#${i+1}</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:12px;font-weight:600;color:var(--t1);margin-bottom:4px">${x.nome}</div>
+                <div class="stat-bar"><div class="stat-bar-fill" style="width:${pct}%;background:${cor}"></div></div>
+              </div>
+              <div class="stat-val" style="color:${cor}">${fmtR(x.lucro)}</div>
+            </div>`;
+          }).join('')}
         </div>
       </div>
       <div class="card">
         <div class="card-title">Projeção financeira</div>
-        <div class="ir"><span style="color:var(--muted)">CPA projetado (80%)</span><span style="color:#C9A84C">${fmtR(projCPA)}</span></div>
-        <div class="ir"><span style="color:var(--muted)">Ainda a depositar</span><span style="color:var(--alerta)">${fmtR(aDepositar)}</span></div>
-        <div class="ir"><span style="color:var(--muted)">Lucro projetado total</span><span style="color:#C9A84C;font-weight:700">${fmtR(lucro+projCPA-aDepositar)}</span></div>
+        <div class="ir"><span>CPA projetado (80% taxa)</span><span style="color:var(--em)">${fmtR(projCPA)}</span></div>
+        <div class="ir"><span>Ainda a depositar</span><span style="color:var(--orange)">${fmtR(aDepositar)}</span></div>
+        <div class="ir"><span>Lucro projetado total</span><span style="color:var(--em);font-weight:700">${fmtR(lucro+projCPA-aDepositar)}</span></div>
       </div>`;
 
-    const cores=['#F59E0B','#10B981','#EF4444','#F97316','#3B82F6','#8B5CF6'];
-    charts['linha']=new Chart(document.getElementById('ch-linha'),{type:'line',data:{labels:dias7.map(d=>{const[,m,dd]=d.split('-');return`${dd}/${m}`}),datasets:[{label:'Lucro',data:lucrosD,borderColor:'#10B981',backgroundColor:'rgba(16,185,129,.08)',fill:true,tension:.4,pointBackgroundColor:'#10B981',pointRadius:5,pointHoverRadius:7,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#161B26',borderColor:'rgba(16,185,129,.2)',borderWidth:1,titleColor:'#10B981',bodyColor:'#9896B0',padding:10}},scales:{y:{ticks:{callback:v=>'R$'+v,color:'#5a4a2a',font:{size:11}},grid:{color:'rgba(16,185,129,.04)'},border:{color:'transparent'}},x:{ticks:{color:'#5a4a2a',font:{size:11}},grid:{display:false},border:{color:'transparent'}}}}});
-    charts['pizza']=new Chart(document.getElementById('ch-pizza'),{type:'doughnut',data:{labels:casasNomes,datasets:[{data:leadsC,backgroundColor:cores,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#8a7a4a',font:{size:10},boxWidth:10}}}}});
-    charts['barra']=new Chart(document.getElementById('ch-barra'),{type:'bar',data:{labels:casasNomes,datasets:[{data:lucroC,backgroundColor:lucroC.map(v=>v>=0?'#10B981':'#EF4444'),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'R$'+v,color:'#8a7a4a',font:{size:10}},grid:{color:'rgba(201,168,76,.08)'}},x:{ticks:{color:'#8a7a4a',font:{size:10}},grid:{display:false}}}}});
+    const cores=['#F59E0B','#10B981','#EF4444','#F97316','#3B82F6','#8B5CF6','#EC4899','#14B8A6'];
+    const chartOpts={responsive:true,maintainAspectRatio:false,animation:{duration:800,easing:'easeInOutQuart'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#1C2333',borderColor:'rgba(16,185,129,.2)',borderWidth:1,titleColor:'#10B981',bodyColor:'#94A3B8',padding:10,cornerRadius:8}}};
+    charts['linha']=new Chart(document.getElementById('ch-linha'),{type:'line',data:{labels:dias7.map(d=>{const[,m,dd]=d.split('-');return`${dd}/${m}`}),datasets:[{data:lucrosD,borderColor:'#10B981',backgroundColor:(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'rgba(16,185,129,.2)');g.addColorStop(1,'rgba(16,185,129,0)');return g;},fill:true,tension:.4,pointBackgroundColor:'#10B981',pointRadius:4,pointHoverRadius:6,borderWidth:2}]},options:{...chartOpts,scales:{y:{ticks:{callback:v=>'R$'+v,color:'#4A5568',font:{size:11}},grid:{color:'rgba(16,185,129,.04)'},border:{display:false}},x:{ticks:{color:'#4A5568',font:{size:10}},grid:{display:false},border:{display:false}}}}});
+    charts['pizza']=new Chart(document.getElementById('ch-pizza'),{type:'doughnut',data:{labels:casasNomes,datasets:[{data:leadsC,backgroundColor:cores,borderWidth:0,hoverOffset:6}]},options:{...chartOpts,cutout:'65%',plugins:{...chartOpts.plugins,legend:{position:'bottom',labels:{color:'#94A3B8',font:{size:10},boxWidth:8,padding:10}}}}});
+    charts['barra']=new Chart(document.getElementById('ch-barra'),{type:'bar',data:{labels:casasNomes,datasets:[{data:lucroC,backgroundColor:lucroC.map((v,i)=>v>=0?cores[i]+'CC':'#EF4444CC'),borderRadius:6,borderSkipped:false}]},options:{...chartOpts,scales:{y:{ticks:{callback:v=>'R$'+v,color:'#4A5568',font:{size:10}},grid:{color:'rgba(255,255,255,.03)'},border:{display:false}},x:{ticks:{color:'#4A5568',font:{size:10}},grid:{display:false},border:{display:false}}}}});
   }catch(e){mb.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
 }
 
@@ -952,32 +1093,57 @@ async function marcarFeito(depId,leadId){
   }catch(e){alert('Erro: '+e.message);}
 }
 
+function gerarAvatar(nome,cor){
+  const initials=nome.trim().split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join('');
+  // darken color for bg
+  const r=parseInt(cor.slice(1,3),16),g=parseInt(cor.slice(3,5),16),b=parseInt(cor.slice(5,7),16);
+  return`<div class="lead-avatar" style="background:rgba(${r},${g},${b},.2);border:1px solid rgba(${r},${g},${b},.35);color:${cor}">${initials}</div>`;
+}
+function calcCountdown(deps){
+  const pendFut=deps.filter(d=>!d.feito&&d.data_deposito>=toDay()).sort((a,b)=>a.data_deposito.localeCompare(b.data_deposito));
+  if(!pendFut.length)return'';
+  const next=pendFut[0];
+  const hoje=new Date(toDay()+'T00:00:00');const nd=new Date(next.data_deposito+'T00:00:00');
+  const diff=Math.round((nd-hoje)/(1000*60*60*24));
+  if(diff===0)return`<span class="countdown cd-warn">⚡ Hoje</span>`;
+  if(diff<0)return`<span class="countdown cd-late">⚠ ${Math.abs(diff)}d atrasado</span>`;
+  if(diff<=2)return`<span class="countdown cd-warn">⏰ ${diff}d</span>`;
+  return`<span class="countdown cd-ok">📅 ${diff}d</span>`;
+}
 async function renderLeads(){
   const mb=document.getElementById('mb');
   try{
     const[leads,deps]=await Promise.all([dbGet('leads'),dbGet('depositos')]);
-    if(!leads.length){mb.innerHTML='<div class="empty">Nenhum lead ainda.<br><span style="font-size:11px">Use "Novo lead" na sidebar</span></div>';return;}
+    if(!leads.length){mb.innerHTML='<div class="empty"><div class="empty-icon">👥</div>Nenhum lead ainda.<br><span style="font-size:12px">Use "Novo lead" na sidebar para começar</span></div>';return;}
     const dm={};deps.forEach(d=>{if(!dm[d.lead_id])dm[d.lead_id]=[];dm[d.lead_id].push(d);});
-    mb.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px;width:100%">'+leads.map(l=>{
+    mb.innerHTML='<div class="stagger" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px;width:100%">'+leads.map(l=>{
       const lds=dm[l.id]||[];
       const feito=lds.filter(d=>d.feito).reduce((s,d)=>s+parseFloat(d.valor),0);
       const pct=l.meta>0?Math.min(100,Math.round(feito/parseFloat(l.meta)*100)):0;
       const pend=lds.filter(d=>!d.feito&&d.data_deposito>=toDay()).length;
       const t=cac(l.casa);
-      return`<div class="lead-card" style="border-left:3px solid ${t}" onclick="verLead('${l.id}')">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
+      const avatar=gerarAvatar(l.nome,t);
+      const countdown=l.cpa_validado?'':calcCountdown(lds);
+      return`<div class="lead-card" onclick="verLead('${l.id}')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          ${avatar}
+          <div style="flex:1;min-width:0">
             <div class="lead-name">${l.nome}</div>
-            <div class="lead-meta" style="display:flex;align-items:center;gap:6px;margin-top:4px">
-              <span style="width:6px;height:6px;border-radius:50%;background:${t};display:inline-block"></span>
+            <div class="lead-meta">
+              <span style="width:5px;height:5px;border-radius:50%;background:${t};display:inline-block;flex-shrink:0"></span>
               ${l.casa} · ${l.telefone}
-              ${l.print_verificado?'<span class="badge b-ok" style="margin-left:4px">✓ Verificado</span>':''}
             </div>
           </div>
-          <span class="badge ${l.cpa_validado?'b-ok':pend>0?'b-pend':'b-fail'}">${l.cpa_validado?'CPA ✓':pend+' pend.'}</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <span class="badge ${l.cpa_validado?'b-ok':pend>0?'b-pend':'b-fail'}">${l.cpa_validado?'✓ CPA':pend+' pend.'}</span>
+            ${countdown}
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-bottom:5px">
+          <span>${fmtR(feito)} de ${fmtR(l.meta)}</span>
+          <span style="color:${t};font-weight:600">${pct}%</span>
         </div>
         <div class="pb"><div class="pf" style="width:${pct}%;background:${t}"></div></div>
-        <div class="progress-info"><span>${fmtR(feito)} de ${fmtR(l.meta)}</span><span>${pct}%</span></div>
       </div>`;
     }).join('')+'</div>';
   }catch(e){mb.innerHTML=`<div class="err">Erro: ${e.message}</div>`;}
