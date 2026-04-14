@@ -496,15 +496,13 @@ const SB='https://bnsucalnkiciczbtnpyu.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJuc3VjYWxua2ljaWN6YnRucHl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTU2NDUsImV4cCI6MjA5MDczMTY0NX0.q8jH7PyNPGBLiPKsDiYzwxqu2UryojJ6f9ol--rH2yg';
 const H={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
 const CASAS={
-  EstrelaBet:{ac:'#F59E0B',deposito:50,cpa:110},
-  SuperBet:  {ac:'#EF4444',deposito:50,cpa:100},
-  Betano:    {ac:'#F97316',deposito:10,cpa:50},
-  JonBet:    {ac:'#10B981',deposito:50,cpa:110},
-  Blaze:     {ac:'#EF4444',deposito:50,cpa:110},
-  Bet7k:     {ac:'#84CC16',deposito:50,cpa:120},
-  CassinoPix:{ac:'#3B82F6',deposito:50,cpa:120},
-  VeraBet:   {ac:'#8B5CF6',deposito:50,cpa:120},
-  default:   {ac:'#10B981',deposito:50,cpa:110}
+  Stake:      {ac:'#F97316',deposito:50,cpa:200},
+  SuperBet:   {ac:'#EF4444',deposito:50,cpa:100},
+  BetAki:     {ac:'#84CC16',deposito:50,cpa:50},
+  EstrelaBet: {ac:'#F59E0B',deposito:50,cpa:115},
+  Betano:     {ac:'#EC4899',deposito:50,cpa:90},
+  SportingBet:{ac:'#3B82F6',deposito:50,cpa:170},
+  default:    {ac:'#10B981',deposito:50,cpa:100}
 };
 const TABS={painel:{t:'Painel ADM',s:'Visão geral e finanças'},novo:{t:'Novo lead',s:'Cadastrar e verificar'},hoje:{t:'Depósitos hoje',s:'Pagamentos pendentes'},leads:{t:'Leads',s:'Todos os cadastros'},afiliados:{t:'Afiliados',s:'Gerenciar parceiros'},planilha:{t:'Planilha',s:'Exportar dados'},detalhe:{t:'Detalhe',s:'Informações do lead'},'afil-painel':{t:'Meu painel',s:'Seus resultados'},'afil-leads':{t:'Meus leads',s:'Leads que você indicou'}};
 
@@ -960,7 +958,7 @@ async function renderPainel(){
         <div class="ir"><span>Lucro projetado total</span><span style="color:var(--em);font-weight:700">${fmtR(lucro+projCPA-aDepositar)}</span></div>
       </div>`;
 
-    const cores=['#F59E0B','#10B981','#EF4444','#F97316','#3B82F6','#8B5CF6','#EC4899','#14B8A6'];
+    const cores=['#F97316','#EF4444','#84CC16','#F59E0B','#EC4899','#3B82F6'];
     const chartOpts={responsive:true,maintainAspectRatio:false,animation:{duration:800,easing:'easeInOutQuart'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#1C2333',borderColor:'rgba(16,185,129,.2)',borderWidth:1,titleColor:'#10B981',bodyColor:'#94A3B8',padding:10,cornerRadius:8}}};
     charts['linha']=new Chart(document.getElementById('ch-linha'),{type:'line',data:{labels:dias7.map(d=>{const[,m,dd]=d.split('-');return`${dd}/${m}`}),datasets:[{data:lucrosD,borderColor:'#10B981',backgroundColor:(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'rgba(16,185,129,.2)');g.addColorStop(1,'rgba(16,185,129,0)');return g;},fill:true,tension:.4,pointBackgroundColor:'#10B981',pointRadius:4,pointHoverRadius:6,borderWidth:2}]},options:{...chartOpts,scales:{y:{ticks:{callback:v=>'R$'+v,color:'#4A5568',font:{size:11}},grid:{color:'rgba(16,185,129,.04)'},border:{display:false}},x:{ticks:{color:'#4A5568',font:{size:10}},grid:{display:false},border:{display:false}}}}});
     charts['pizza']=new Chart(document.getElementById('ch-pizza'),{type:'doughnut',data:{labels:casasNomes,datasets:[{data:leadsC,backgroundColor:cores,borderWidth:0,hoverOffset:6}]},options:{...chartOpts,cutout:'65%',plugins:{...chartOpts.plugins,legend:{position:'bottom',labels:{color:'#94A3B8',font:{size:10},boxWidth:8,padding:10}}}}});
@@ -983,14 +981,12 @@ function renderNovo(){
       <div><label>Casa de apostas</label>
         <select id="fc" onchange="trocarCasaForm(this.value)">
           <option value="">Selecionar...</option>
-          <option value="EstrelaBet">EstrelaBet — R$50 dep · CPA R$110</option>
+          <option value="Stake">Stake — R$50 dep · CPA R$200</option>
           <option value="SuperBet">SuperBet — R$50 dep · CPA R$100</option>
-          <option value="Betano">Betano — R$10 dep · CPA R$50</option>
-          <option value="JonBet">JonBet — R$50 dep · CPA R$110</option>
-          <option value="Blaze">Blaze — R$50 dep · CPA R$110</option>
-          <option value="Bet7k">Bet7k — R$50 dep · CPA R$120</option>
-          <option value="CassinoPix">CassinoPix — R$50 dep · CPA R$120</option>
-          <option value="VeraBet">VeraBet — R$50 dep · CPA R$120</option>
+          <option value="BetAki">BetAki — R$50 dep · CPA R$50</option>
+          <option value="EstrelaBet">EstrelaBet — R$50 dep · CPA R$115</option>
+          <option value="Betano">Betano — R$50 dep · CPA R$90</option>
+          <option value="SportingBet">SportingBet — R$50 dep · CPA R$170</option>
         </select>
       </div>
       <div><label>CPA esperado (R$)</label><input id="fcpa" type="number" placeholder="Selecione a casa" readonly style="opacity:.6"></div>
@@ -1261,14 +1257,12 @@ async function renderAfiliados(){
               <label>Casa de apostas</label>
               <select id="alc" onchange="trocarCasaAfilForm(this.value)">
                 <option value="">Selecionar...</option>
-                <option value="EstrelaBet">EstrelaBet — R$50 dep · CPA R$110</option>
+                <option value="Stake">Stake — R$50 dep · CPA R$200</option>
                 <option value="SuperBet">SuperBet — R$50 dep · CPA R$100</option>
-                <option value="Betano">Betano — R$10 dep · CPA R$50</option>
-                <option value="JonBet">JonBet — R$50 dep · CPA R$110</option>
-                <option value="Blaze">Blaze — R$50 dep · CPA R$110</option>
-                <option value="Bet7k">Bet7k — R$50 dep · CPA R$120</option>
-                <option value="CassinoPix">CassinoPix — R$50 dep · CPA R$120</option>
-                <option value="VeraBet">VeraBet — R$50 dep · CPA R$120</option>
+                <option value="BetAki">BetAki — R$50 dep · CPA R$50</option>
+                <option value="EstrelaBet">EstrelaBet — R$50 dep · CPA R$115</option>
+                <option value="Betano">Betano — R$50 dep · CPA R$90</option>
+                <option value="SportingBet">SportingBet — R$50 dep · CPA R$170</option>
               </select>
             </div>
             <div><label>Afiliado responsável</label><select id="ala"><option value="">Selecionar...</option>${afils.map(a=>`<option value="${a.id}">${a.nome} (${a.percentual}%)</option>`).join('')}</select></div>
@@ -1564,14 +1558,12 @@ async function renderAfilLeads(){
               <label>Casa de apostas</label>
               <select id="alc" onchange="trocarCasaAfilForm(this.value)">
                 <option value="">Selecionar...</option>
-                <option value="EstrelaBet">EstrelaBet — R$50 dep · CPA R$110</option>
+                <option value="Stake">Stake — R$50 dep · CPA R$200</option>
                 <option value="SuperBet">SuperBet — R$50 dep · CPA R$100</option>
-                <option value="Betano">Betano — R$10 dep · CPA R$50</option>
-                <option value="JonBet">JonBet — R$50 dep · CPA R$110</option>
-                <option value="Blaze">Blaze — R$50 dep · CPA R$110</option>
-                <option value="Bet7k">Bet7k — R$50 dep · CPA R$120</option>
-                <option value="CassinoPix">CassinoPix — R$50 dep · CPA R$120</option>
-                <option value="VeraBet">VeraBet — R$50 dep · CPA R$120</option>
+                <option value="BetAki">BetAki — R$50 dep · CPA R$50</option>
+                <option value="EstrelaBet">EstrelaBet — R$50 dep · CPA R$115</option>
+                <option value="Betano">Betano — R$50 dep · CPA R$90</option>
+                <option value="SportingBet">SportingBet — R$50 dep · CPA R$170</option>
               </select>
             </div>
             <div><label>Data do primeiro depósito</label><input id="alini" type="date" value="${toDay()}"></div>
